@@ -100,31 +100,31 @@
 </head>
 <body>
 <div id="nlt-root">
-
+ 
   <div class="hd">
     <div class="brand">Double<span>D</span>solution</div>
     <div class="ey">Portale DoubleDsolution</div>
     <h1>Noleggio a <em>Lungo Termine</em></h1>
     <div class="rule"></div>
   </div>
-
+ 
   <div class="prog">
     <div class="prog-row"><span>Completamento</span><span id="np">0%</span></div>
     <div class="prog-track"><div class="prog-fill" id="nf"></div></div>
   </div>
-
+ 
   <div class="card">
     <div class="cbar"></div>
     <div class="cbody" id="nb">
       <form id="nlt-form" novalidate>
-
+ 
         <div class="sec">
           <div class="sttl">01 — Intestatario</div>
           <div class="f" style="margin-bottom:20px">
             <label>Tipo Intestatario <span class="req">*</span></label>
             <div class="pills">
-              <button type="button" class="pill on" id="paz" onclick="NLT.tipo('Azienda')">🏢&nbsp; Azienda</button>
-              <button type="button" class="pill" id="ppr" onclick="NLT.tipo('Privato')">👤&nbsp; Privato</button>
+              <button type="button" class="pill on" id="paz" onclick="NLT.tipo('Azienda')">&#127970;&nbsp; Azienda</button>
+              <button type="button" class="pill" id="ppr" onclick="NLT.tipo('Privato')">&#128100;&nbsp; Privato</button>
             </div>
             <input type="hidden" id="ntipo" value="Azienda">
           </div>
@@ -141,7 +141,7 @@
             </div>
           </div>
         </div>
-
+ 
         <div class="sec">
           <div class="sttl">02 — Referente</div>
           <div class="g2">
@@ -162,7 +162,7 @@
             </div>
           </div>
         </div>
-
+ 
         <div class="sec">
           <div class="sttl">03 — Veicolo Desiderato</div>
           <div class="g2">
@@ -178,7 +178,7 @@
             </div>
           </div>
         </div>
-
+ 
         <div class="sec">
           <div class="sttl">04 — Parametri Contratto</div>
           <div class="f" style="margin-bottom:26px">
@@ -213,7 +213,7 @@
             <input type="hidden" id="nfr" value="No">
           </div>
         </div>
-
+ 
         <div class="sec">
           <div class="sttl">05 — Note Aggiuntive</div>
           <div class="f">
@@ -221,7 +221,7 @@
             <textarea id="nnote" placeholder="Colore, optional, esigenze particolari..."></textarea>
           </div>
         </div>
-
+ 
         <div class="subw">
           <div class="subn">* Campi obbligatori — Dati trattati ai sensi del GDPR</div>
           <button type="submit" class="btn" id="nbtn">
@@ -232,20 +232,14 @@
             </svg>
           </button>
         </div>
-
+ 
       </form>
     </div>
   </div>
 </div>
 <div id="nlt-toast"></div>
-
+ 
 <script>
-// ╔══════════════════════════════════════════════════════╗
-// ║  UNICA RIGA DA MODIFICARE:                           ║
-// ║  Sostituisci con l URL del tuo Cloudflare Worker     ║
-var WORKER = 'https://nlt-proxy.mirko-385.workers.dev';
-// ╚══════════════════════════════════════════════════════╝
-
 const CAR_BRANDS = [
   { id:"abarth",         name:"Abarth",            flag:"🇮🇹", origin:"italiana",   models:["500e Scorpionissima","600e"] },
   { id:"aiways",         name:"Aiways",             flag:"🇨🇳", origin:"cinese",     models:["U5","U6"] },
@@ -261,7 +255,7 @@ const CAR_BRANDS = [
   { id:"citroen",        name:"Citroën",            flag:"🇫🇷", origin:"europea",    models:["C3","ë-C3","C3 Aircross","ë-C3 Aircross","C5 Aircross","Berlingo","SpaceTourer"] },
   { id:"cupra",          name:"Cupra",              flag:"🇪🇸", origin:"europea",    models:["Born","Formentor","Leon","Ateca","Terramar","Tavascan"] },
   { id:"dacia",          name:"Dacia",              flag:"🇷🇴", origin:"europea",    models:["Sandero","Sandero Stepway","Duster","Jogger","Spring","Bigster","C-Neo","Hipster"] },
-  { id:"deepal",         name:"Deepal (Changan)",   flag:"🇨🇳", origin:"cinese",     models:["S05","S07"] },
+  { id:"Changan",         name:"Changan",           flag:"🇨🇳", origin:"cinese",     models:["S05","S07"] },
   { id:"dodge",          name:"Dodge",              flag:"🇺🇸", origin:"americana",  models:["Durango","Challenger","Charger"] },
   { id:"dongfeng",       name:"Dongfeng",           flag:"🇨🇳", origin:"cinese",     models:["Box","Nammi 01","EC07"] },
   { id:"dr-automobiles", name:"DR Automobiles",     flag:"🇮🇹", origin:"italiana",   models:["DR 4.0","DR 5.0","DR 6.0"] },
@@ -269,7 +263,7 @@ const CAR_BRANDS = [
   { id:"evo",            name:"EVO",               flag:"🇮🇹", origin:"italiana",   models:["EVO 3","EVO 5","EVO 6","EVO 7"] },
   { id:"ferrari",        name:"Ferrari",            flag:"🇮🇹", origin:"italiana",   models:["296 GTB","296 GTS","SF90 Stradale","Roma","Portofino M","Purosangue","12Cilindri","F80"] },
   { id:"fiat",           name:"Fiat",               flag:"🇮🇹", origin:"italiana",   models:["Panda","Grande Panda","500","500e","Tipo","600","600e"] },
-  { id:"firefly",        name:"Firefly (NIO)",      flag:"🇨🇳", origin:"cinese",     models:["Firefly EV"] },
+  { id:"NIO",            name:"NIO",                flag:"🇨🇳", origin:"cinese",     models:["Firefly EV"] },
   { id:"ford",           name:"Ford",               flag:"🇺🇸", origin:"americana",  models:["Puma","Kuga","Explorer","Mustang","Mustang Mach-E","Bronco","Explorer EV","Transit"] },
   { id:"forthing",       name:"Forthing",           flag:"🇨🇳", origin:"cinese",     models:["Friday","U-Tour"] },
   { id:"gac-aion",       name:"GAC Aion",           flag:"🇨🇳", origin:"cinese",     models:["Aion Y Plus","Aion V","Aion LX Plus"] },
@@ -279,7 +273,7 @@ const CAR_BRANDS = [
   { id:"ickx",           name:"ICKX",              flag:"🇮🇹", origin:"italiana",   models:["E5","E6"] },
   { id:"ineos",          name:"Ineos",              flag:"🇬🇧", origin:"europea",    models:["Grenadier","Grenadier Quartermaster"] },
   { id:"isuzu",          name:"Isuzu",              flag:"🇯🇵", origin:"giapponese", models:["D-Max","D-Max N60","MU-X"] },
-  { id:"jaecoo",         name:"Jaecoo (Chery)",     flag:"🇨🇳", origin:"cinese",     models:["Jaecoo 5","Jaecoo 7","Jaecoo 8"] },
+  { id:"jaecoo",         name:"Jaecoo",             flag:"🇨🇳", origin:"cinese",     models:["Jaecoo 5","Jaecoo 7","Jaecoo 8"] },
   { id:"jaguar",         name:"Jaguar",             flag:"🇬🇧", origin:"europea",    models:["F-Pace","E-Pace","I-Pace","F-Type","XE","XF"] },
   { id:"jeep",           name:"Jeep",               flag:"🇺🇸", origin:"americana",  models:["Avenger","Renegade","Compass","Cherokee","Wrangler","Grand Cherokee","Gladiator"] },
   { id:"kia",            name:"Kia",                flag:"🇰🇷", origin:"coreana",    models:["Picanto","Rio","Ceed","Ceed Sportswagon","Stonic","Niro","Niro EV","Sportage","Sorento","EV3","EV4","EV6","EV9"] },
@@ -300,7 +294,7 @@ const CAR_BRANDS = [
   { id:"mitsubishi",     name:"Mitsubishi",         flag:"🇯🇵", origin:"giapponese", models:["ASX","Eclipse Cross","Outlander","Outlander PHEV"] },
   { id:"nio",            name:"NIO",                flag:"🇨🇳", origin:"cinese",     models:["ET5","ET5 Touring","ET7","EL6","EL7","EL8"] },
   { id:"nissan",         name:"Nissan",             flag:"🇯🇵", origin:"giapponese", models:["Juke","Qashqai","X-Trail","Leaf","Ariya","Micra","GT-R","Navara"] },
-  { id:"omoda",          name:"Omoda (Chery)",      flag:"🇨🇳", origin:"cinese",     models:["Omoda 3","Omoda 5","Omoda 7","Omoda 8","Omoda 9"] },
+  { id:"omoda",          name:"Omoda",              flag:"🇨🇳", origin:"cinese",     models:["Omoda 3","Omoda 5","Omoda 7","Omoda 8","Omoda 9"] },
   { id:"opel",           name:"Opel",               flag:"🇩🇪", origin:"europea",    models:["Corsa","Corsa Electric","Astra","Astra Sports Tourer","Mokka","Mokka-e","Grandland","Frontera","Zafira"] },
   { id:"ora",            name:"ORA (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Funky Cat","ORA 03"] },
   { id:"peugeot",        name:"Peugeot",            flag:"🇫🇷", origin:"europea",    models:["208","308","408","508","2008","3008","5008","E-208","E-308","E-2008","E-408","E-3008","E-5008"] },
@@ -323,16 +317,19 @@ const CAR_BRANDS = [
   { id:"volvo",          name:"Volvo",              flag:"🇸🇪", origin:"europea",    models:["XC40","XC60","XC90","V60","V60 Cross Country","V90","S60","S90","EX30","EX40","EX60","EX90","ES90"] },
   { id:"wey",            name:"Wey (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Coffee 01 PHEV","Coffee 02"] },
   { id:"xpeng",          name:"Xpeng",              flag:"🇨🇳", origin:"cinese",     models:["G6","G9"] },
-  { id:"zeekr",          name:"Zeekr (Geely)",      flag:"🇨🇳", origin:"cinese",     models:["001","007","009","X","EX5","Starray"] },
+  { id:"Geely",          name:"Geely",              flag:"🇨🇳", origin:"cinese",     models:["001","007","009","X","EX5","Starray"] },
 ];
-
+ 
 window.NLT = (function(){
   'use strict';
-
+ 
+  var FD_URL  = 'https://doubledsolution.freshdesk.com/api/v2/tickets';
+  var FD_AUTH = 'Basic aExJc3k5TzJrc0xqY1RSdzRGZ2w6WA==';
+ 
   function initMarca(){
     var s = document.getElementById('nmarca');
     var o = document.createElement('option');
-    o.value=''; o.textContent='— Seleziona marca —';
+    o.value=''; o.textContent='-- Seleziona marca --';
     s.appendChild(o);
     for(var i=0;i<CAR_BRANDS.length;i++){
       var op=document.createElement('option');
@@ -342,7 +339,7 @@ window.NLT = (function(){
     }
     s.addEventListener('change',function(){ clr('ff-marca'); prog(); });
   }
-
+ 
   function tipo(v){
     document.getElementById('ntipo').value=v;
     document.getElementById('paz').classList.toggle('on',v==='Azienda');
@@ -360,29 +357,29 @@ window.NLT = (function(){
     }
     prog();
   }
-
+ 
   function durata(v,btn){
     document.getElementById('ndurata').value=v;
     var ps=btn.closest('.pills').querySelectorAll('.pill');
     for(var i=0;i<ps.length;i++) ps[i].classList.remove('on');
     btn.classList.add('on');
   }
-
+ 
   function km(v){
     var n=parseInt(v);
     document.getElementById('nkmv').textContent=n.toLocaleString('it-IT');
     document.getElementById('nkm').value=v;
     document.getElementById('nkms').style.setProperty('--pct',((n-10000)/190000*100).toFixed(1)+'%');
   }
-
+ 
   function fr(v){
     document.getElementById('nfr').value=v;
     document.getElementById('frno').classList.toggle('on',v==='No');
     document.getElementById('frsi').classList.toggle('on',v==='Si');
   }
-
+ 
   var RQ=['nnome','npiva','nref','ntel','nemail','nmarca','nmodello'];
-
+ 
   function prog(){
     var f=3,t=RQ.length+3;
     for(var i=0;i<RQ.length;i++){
@@ -393,9 +390,9 @@ window.NLT = (function(){
     document.getElementById('nf').style.width=p+'%';
     document.getElementById('np').textContent=p+'%';
   }
-
+ 
   function clr(id){ var el=document.getElementById(id); if(el) el.classList.remove('bad'); }
-
+ 
   function validate(){
     var ok=true;
     function e(id,show){
@@ -403,16 +400,16 @@ window.NLT = (function(){
       if(el) el.classList.toggle('bad',show);
       if(show) ok=false;
     }
-    e('ff-nome',  !document.getElementById('nnome').value.trim());
-    e('ff-piva',  !document.getElementById('npiva').value.trim());
-    e('ff-ref',   !document.getElementById('nref').value.trim());
-    e('ff-tel',   !/^[\+\d\s\-\(\)]{7,}$/.test(document.getElementById('ntel').value.trim()));
-    e('ff-email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('nemail').value.trim()));
-    e('ff-marca', !document.getElementById('nmarca').value);
+    e('ff-nome',   !document.getElementById('nnome').value.trim());
+    e('ff-piva',   !document.getElementById('npiva').value.trim());
+    e('ff-ref',    !document.getElementById('nref').value.trim());
+    e('ff-tel',    !/^[\+\d\s\-\(\)]{7,}$/.test(document.getElementById('ntel').value.trim()));
+    e('ff-email',  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('nemail').value.trim()));
+    e('ff-marca',  !document.getElementById('nmarca').value);
     e('ff-modello',!document.getElementById('nmodello').value.trim());
     return ok;
   }
-
+ 
   function desc(d){
     var r='<h3>Richiesta Noleggio a Lungo Termine</h3>';
     r+='<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:13px">';
@@ -431,13 +428,13 @@ window.NLT = (function(){
     r+='</table>';
     return r;
   }
-
+ 
   function toast(msg,t){
     var el=document.getElementById('nlt-toast');
     el.textContent=msg; el.className='show '+(t||'ok');
     setTimeout(function(){ el.className=''; },5000);
   }
-
+ 
   function submit(ev){
     ev.preventDefault();
     if(!validate()){
@@ -445,39 +442,37 @@ window.NLT = (function(){
       if(f) f.scrollIntoView({behavior:'smooth',block:'center'});
       return;
     }
-    if(WORKER.indexOf('TUONOME')!==-1){
-      toast('Aggiorna la variabile WORKER con il tuo URL Cloudflare','err');
-      return;
-    }
     var btn=document.getElementById('nbtn');
     btn.classList.add('loading'); btn.disabled=true;
     var d={
-      tipo:  document.getElementById('ntipo').value,
-      nome:  document.getElementById('nnome').value.trim(),
-      piva:  document.getElementById('npiva').value.trim(),
-      ref:   document.getElementById('nref').value.trim(),
-      tel:   document.getElementById('ntel').value.trim(),
-      email: document.getElementById('nemail').value.trim(),
-      marca: document.getElementById('nmarca').value,
+      tipo:    document.getElementById('ntipo').value,
+      nome:    document.getElementById('nnome').value.trim(),
+      piva:    document.getElementById('npiva').value.trim(),
+      ref:     document.getElementById('nref').value.trim(),
+      tel:     document.getElementById('ntel').value.trim(),
+      email:   document.getElementById('nemail').value.trim(),
+      marca:   document.getElementById('nmarca').value,
       modello: document.getElementById('nmodello').value.trim(),
-      durata: document.getElementById('ndurata').value,
-      km:    document.getElementById('nkm').value,
-      fr:    document.getElementById('nfr').value,
-      note:  document.getElementById('nnote').value.trim()
+      durata:  document.getElementById('ndurata').value,
+      km:      document.getElementById('nkm').value,
+      fr:      document.getElementById('nfr').value,
+      note:    document.getElementById('nnote').value.trim()
     };
     var payload={
-      subject:    'NLT — '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
+      subject:     'NLT \u2014 '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
       description: desc(d),
-      email:      d.email,
-      name:       d.ref,
-      phone:      d.tel,
-      priority:   2,
-      tags:       ['nlt','noleggio-lungo-termine'],
-      custom_fields:{}
+      email:       d.email,
+      name:        d.ref,
+      phone:       d.tel,
+      priority:    2,
+      tags:        ['nlt','noleggio-lungo-termine']
     };
-    fetch(WORKER,{
+    fetch(FD_URL,{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization': FD_AUTH
+      },
       body:JSON.stringify(payload)
     })
     .then(function(r){
@@ -501,7 +496,7 @@ window.NLT = (function(){
       btn.classList.remove('loading'); btn.disabled=false;
     });
   }
-
+ 
   function init(){
     initMarca();
     km(40000);
@@ -514,17 +509,16 @@ window.NLT = (function(){
         el.addEventListener('input',prog);
         el.addEventListener('change',prog);
         el.addEventListener('input',function(){
-          var fid='ff-'+id.replace('n','');
-          clr(fid);
+          clr('ff-'+id.replace(/^n/,''));
         });
       })(RQ[i]);
     }
   }
-
+ 
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',init);
   } else { init(); }
-
+ 
   return { tipo:tipo, durata:durata, km:km, fr:fr };
 })();
 </script>
