@@ -3,297 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Richiesta Noleggio a Lungo Termine — DoubleDsolution</title>
+<title>Richiesta Noleggio a Lungo Termine</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-#nlt-root { all: initial; display: block; font-family: "DM Sans", sans-serif; }
-#nlt-root *, #nlt-root *::before, #nlt-root *::after { box-sizing: border-box; margin: 0; padding: 0; }
+#nlt-root { all:initial; display:block; font-family:"DM Sans",sans-serif; }
+#nlt-root *, #nlt-root *::before, #nlt-root *::after { box-sizing:border-box; margin:0; padding:0; }
 #nlt-root {
-  --n-ink:   #0a1235;
-  --n-navy:  #0d1e90;
-  --n-blue:  #1a35b8;
-  --n-sky:   #5090f0;
-  --n-cream: #eef2ff;
-  --n-ash:   #c8d4f8;
-  --n-mist:  #3a4e8c;
-  --n-err:   #c0392b;
-  --n-ok:    #27ae60;
-  color: var(--n-ink);
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 32px 16px 80px;
+  --ni:#0a1235; --nn:#0d1e90; --nb:#1a35b8; --ns:#5090f0;
+  --nc:#eef2ff; --na:#c8d4f8; --nm:#3a4e8c;
+  --ne:#c0392b; --ng:#27ae60;
+  color:var(--ni); max-width:720px; margin:0 auto; padding:32px 16px 80px;
 }
-
-/* header */
-#nlt-root .n-hd { text-align: center; margin-bottom: 28px; }
-#nlt-root .n-hd img { height: 150px; width: auto; display: block; margin: 0 auto 16px; }
-#nlt-root .n-hd .n-ey { font-size: 10px; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--n-blue); margin-bottom: 10px; }
-#nlt-root .n-hd h1 { font-family: "Cormorant Garamond", serif; font-weight: 300; font-size: clamp(28px,4vw,44px); color: var(--n-navy); line-height: 1.1; }
-#nlt-root .n-hd h1 em { font-style: italic; color: var(--n-blue); }
-#nlt-root .n-hd .n-rule { width: 44px; height: 1px; background: var(--n-blue); margin: 14px auto 0; opacity: .45; }
-
-/* api strip */
-#nlt-root .n-api { background: var(--n-cream); border: 1px solid var(--n-ash); border-radius: 3px; padding: 12px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-#nlt-root .n-api-lbl { font-size: 10px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--n-mist); white-space: nowrap; }
-#nlt-root .n-api input { flex: 1; min-width: 200px; font-family: "DM Sans", sans-serif; font-size: 13px; color: var(--n-ink); background: #fff; border: 1px solid var(--n-ash); border-radius: 2px; padding: 8px 12px; outline: none; }
-#nlt-root .n-api input:focus { border-color: var(--n-blue); }
-#nlt-root .n-api small { font-size: 11px; color: #999; white-space: nowrap; }
-
-/* progress */
-#nlt-root .n-prog { margin-bottom: 18px; }
-#nlt-root .n-prog-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--n-mist); letter-spacing: .07em; margin-bottom: 7px; }
-#nlt-root .n-prog-track { height: 2px; background: var(--n-ash); border-radius: 2px; }
-#nlt-root .n-prog-fill { height: 100%; background: linear-gradient(90deg, var(--n-navy), var(--n-sky)); border-radius: 2px; transition: width .4s ease; width: 0%; }
-
-/* card */
-#nlt-root .n-card { background: #fff; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,.05), 0 16px 40px rgba(0,0,0,.08); overflow: hidden; }
-#nlt-root .n-bar { height: 3px; background: linear-gradient(90deg, var(--n-navy), var(--n-sky), transparent); }
-#nlt-root .n-body { padding: 40px 48px; }
-@media(max-width:560px){ #nlt-root .n-body { padding: 28px 20px; } }
-
-/* sections */
-#nlt-root .n-sec { margin-bottom: 36px; }
-#nlt-root .n-sec-ttl { font-family: "Cormorant Garamond", serif; font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--n-mist); border-bottom: 1px solid var(--n-ash); padding-bottom: 9px; margin-bottom: 24px; }
-
-/* grid */
-#nlt-root .n-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-@media(max-width:520px){ #nlt-root .n-g2 { grid-template-columns: 1fr; } }
-
-/* fields */
-#nlt-root .n-f { display: flex; flex-direction: column; gap: 6px; }
-#nlt-root .n-f > label { font-size: 10px; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; color: var(--n-mist); }
-#nlt-root .n-f .req { color: var(--n-blue); }
-#nlt-root .n-f input,
-#nlt-root .n-f select,
-#nlt-root .n-f textarea {
-  font-family: "DM Sans", sans-serif !important;
-  font-size: 14px !important; font-weight: 300 !important;
-  color: var(--n-ink) !important;
-  background: var(--n-cream) !important;
-  border: 1px solid var(--n-ash) !important;
-  border-radius: 2px !important;
-  padding: 12px 15px !important;
-  outline: none !important;
-  width: 100% !important;
-  appearance: none !important; -webkit-appearance: none !important;
-  transition: border-color .2s, background .2s !important;
-  box-shadow: none !important;
+#nlt-root .hd { text-align:center; margin-bottom:28px; }
+#nlt-root .hd .brand { font-size:24px; font-weight:600; letter-spacing:.06em; color:var(--nn); margin-bottom:4px; }
+#nlt-root .hd .brand span { color:var(--nb); }
+#nlt-root .hd .ey { font-size:10px; font-weight:500; letter-spacing:.28em; text-transform:uppercase; color:var(--nb); margin-bottom:10px; }
+#nlt-root .hd h1 { font-family:"Cormorant Garamond",serif; font-weight:300; font-size:clamp(28px,4vw,44px); color:var(--nn); line-height:1.1; }
+#nlt-root .hd h1 em { font-style:italic; color:var(--nb); }
+#nlt-root .hd .rule { width:44px; height:1px; background:var(--nb); margin:14px auto 0; opacity:.45; }
+#nlt-root .prog { margin-bottom:18px; }
+#nlt-root .prog-row { display:flex; justify-content:space-between; font-size:11px; color:var(--nm); letter-spacing:.07em; margin-bottom:7px; }
+#nlt-root .prog-track { height:2px; background:var(--na); border-radius:2px; }
+#nlt-root .prog-fill { height:100%; background:linear-gradient(90deg,var(--nn),var(--ns)); border-radius:2px; transition:width .4s ease; width:0%; }
+#nlt-root .card { background:#fff; border-radius:3px; box-shadow:0 2px 6px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.08); overflow:hidden; }
+#nlt-root .cbar { height:3px; background:linear-gradient(90deg,var(--nn),var(--ns),transparent); }
+#nlt-root .cbody { padding:40px 48px; }
+@media(max-width:560px){ #nlt-root .cbody { padding:28px 20px; } }
+#nlt-root .sec { margin-bottom:36px; }
+#nlt-root .sttl { font-family:"Cormorant Garamond",serif; font-size:12px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--nm); border-bottom:1px solid var(--na); padding-bottom:9px; margin-bottom:24px; }
+#nlt-root .g2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media(max-width:520px){ #nlt-root .g2 { grid-template-columns:1fr; } }
+#nlt-root .f { display:flex; flex-direction:column; gap:6px; }
+#nlt-root .f > label { font-size:10px; font-weight:500; letter-spacing:.15em; text-transform:uppercase; color:var(--nm); }
+#nlt-root .f .req { color:var(--nb); }
+#nlt-root .f input, #nlt-root .f select, #nlt-root .f textarea {
+  font-family:"DM Sans",sans-serif !important; font-size:14px !important; font-weight:300 !important;
+  color:var(--ni) !important; background:var(--nc) !important;
+  border:1px solid var(--na) !important; border-radius:2px !important;
+  padding:12px 15px !important; outline:none !important; width:100% !important;
+  appearance:none !important; -webkit-appearance:none !important;
+  transition:border-color .2s,background .2s !important; box-shadow:none !important;
 }
-#nlt-root .n-f input:focus,
-#nlt-root .n-f select:focus,
-#nlt-root .n-f textarea:focus {
-  background: #fff !important;
-  border-color: var(--n-blue) !important;
-  box-shadow: 0 0 0 3px rgba(26,53,184,.09) !important;
+#nlt-root .f input:focus, #nlt-root .f select:focus, #nlt-root .f textarea:focus {
+  background:#fff !important; border-color:var(--nb) !important;
+  box-shadow:0 0 0 3px rgba(26,53,184,.09) !important;
 }
-#nlt-root .n-f input::placeholder,
-#nlt-root .n-f textarea::placeholder { color: #bbb !important; }
-#nlt-root .n-f .n-hint { font-size: 11px; color: #aaa; }
-#nlt-root .n-f .n-err { font-size: 11px; color: var(--n-err); display: none; }
-#nlt-root .n-f.n-bad .n-err { display: block; }
-#nlt-root .n-f.n-bad input,
-#nlt-root .n-f.n-bad select { border-color: var(--n-err) !important; }
-
-/* select arrow */
-#nlt-root .n-sw { position: relative; }
-#nlt-root .n-sw::after { content: ""; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid var(--n-blue); pointer-events: none; }
-
-/* pills */
-#nlt-root .n-pills { display: flex; border: 1px solid var(--n-ash); border-radius: 2px; overflow: hidden; }
-#nlt-root .n-pill { flex: 1; background: var(--n-cream); border: none !important; padding: 11px; font-family: "DM Sans", sans-serif; font-size: 13px; color: var(--n-mist); cursor: pointer; transition: background .2s, color .2s; border-right: 1px solid var(--n-ash) !important; }
-#nlt-root .n-pill:last-child { border-right: none !important; }
-#nlt-root .n-pill.on { background: var(--n-navy); color: #fff; }
-
-/* km slider */
-#nlt-root .n-km-disp { text-align: right; font-family: "Cormorant Garamond", serif; font-size: 24px; color: var(--n-navy); margin-bottom: 8px; }
-#nlt-root .n-km-disp small { font-size: 13px; color: var(--n-mist); font-family: "DM Sans", sans-serif; }
-#nlt-root .n-f input[type=range] { padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; cursor: pointer; }
-#nlt-root .n-f input[type=range]::-webkit-slider-runnable-track { height: 2px; background: linear-gradient(90deg, var(--n-navy) 0%, var(--n-navy) var(--pct,20%), var(--n-ash) var(--pct,20%)); }
-#nlt-root .n-f input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--n-navy); border: 2px solid #fff; box-shadow: 0 2px 8px rgba(13,30,144,.35); margin-top: -8px; }
-#nlt-root .n-f input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--n-navy); border: 2px solid #fff; }
-#nlt-root .n-km-ticks { display: flex; justify-content: space-between; font-size: 10px; color: #bbb; margin-top: 6px; }
-
-/* franchigia cards */
-#nlt-root .n-fr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-#nlt-root .n-fr-card { border: 1px solid var(--n-ash); border-radius: 2px; padding: 14px; cursor: pointer; transition: border-color .2s, background .2s; display: flex; flex-direction: column; gap: 5px; }
-#nlt-root .n-fr-card.on { border-color: var(--n-navy); background: rgba(13,30,144,.04); }
-#nlt-root .n-fr-top { display: flex; align-items: center; gap: 9px; }
-#nlt-root .n-fr-dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--n-ash); flex-shrink: 0; transition: all .2s; }
-#nlt-root .n-fr-card.on .n-fr-dot { border-color: var(--n-navy); background: var(--n-navy); box-shadow: inset 0 0 0 3px #fff; }
-#nlt-root .n-fr-lbl { font-size: 14px; color: var(--n-ink); }
-#nlt-root .n-fr-desc { font-size: 11px; color: var(--n-mist); line-height: 1.5; padding-left: 24px; }
-
-/* textarea */
-#nlt-root .n-f textarea { resize: vertical; min-height: 88px; line-height: 1.6; }
-
-/* submit */
-#nlt-root .n-sub-wrap { margin-top: 36px; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-#nlt-root .n-sub-note { font-size: 11px; color: #bbb; letter-spacing: .04em; }
-#nlt-root .n-btn {
-  display: inline-flex; align-items: center; gap: 11px;
-  background: var(--n-navy); color: #fff;
-  border: none !important; border-radius: 2px;
-  padding: 16px 36px; cursor: pointer;
-  font-family: "DM Sans", sans-serif !important;
-  font-size: 13px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
-  position: relative; overflow: hidden; transition: color .3s;
+#nlt-root .f input::placeholder, #nlt-root .f textarea::placeholder { color:#bbb !important; }
+#nlt-root .f .hint { font-size:11px; color:#aaa; }
+#nlt-root .f .err { font-size:11px; color:var(--ne); display:none; }
+#nlt-root .f.bad .err { display:block; }
+#nlt-root .f.bad input, #nlt-root .f.bad select { border-color:var(--ne) !important; }
+#nlt-root .sw { position:relative; }
+#nlt-root .sw::after { content:""; position:absolute; right:14px; top:50%; transform:translateY(-50%); border-left:5px solid transparent; border-right:5px solid transparent; border-top:6px solid var(--nb); pointer-events:none; }
+#nlt-root .pills { display:flex; border:1px solid var(--na); border-radius:2px; overflow:hidden; }
+#nlt-root .pill { flex:1; background:var(--nc); border:none !important; padding:11px; font-family:"DM Sans",sans-serif; font-size:13px; color:var(--nm); cursor:pointer; transition:background .2s,color .2s; border-right:1px solid var(--na) !important; }
+#nlt-root .pill:last-child { border-right:none !important; }
+#nlt-root .pill.on { background:var(--nn); color:#fff; }
+#nlt-root .kmd { text-align:right; font-family:"Cormorant Garamond",serif; font-size:24px; color:var(--nn); margin-bottom:8px; }
+#nlt-root .kmd small { font-size:13px; color:var(--nm); font-family:"DM Sans",sans-serif; }
+#nlt-root .f input[type=range] { padding:0 !important; background:transparent !important; border:none !important; box-shadow:none !important; cursor:pointer; }
+#nlt-root .f input[type=range]::-webkit-slider-runnable-track { height:2px; background:linear-gradient(90deg,var(--nn) 0%,var(--nn) var(--pct,20%),var(--na) var(--pct,20%)); }
+#nlt-root .f input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--nn); border:2px solid #fff; box-shadow:0 2px 8px rgba(13,30,144,.35); margin-top:-8px; }
+#nlt-root .f input[type=range]::-moz-range-thumb { width:18px; height:18px; border-radius:50%; background:var(--nn); border:2px solid #fff; }
+#nlt-root .kmtk { display:flex; justify-content:space-between; font-size:10px; color:#bbb; margin-top:6px; }
+#nlt-root .frg { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+#nlt-root .frc { border:1px solid var(--na); border-radius:2px; padding:14px; cursor:pointer; transition:border-color .2s,background .2s; display:flex; flex-direction:column; gap:5px; }
+#nlt-root .frc.on { border-color:var(--nn); background:rgba(13,30,144,.04); }
+#nlt-root .frt { display:flex; align-items:center; gap:9px; }
+#nlt-root .frd { width:15px; height:15px; border-radius:50%; border:2px solid var(--na); flex-shrink:0; transition:all .2s; }
+#nlt-root .frc.on .frd { border-color:var(--nn); background:var(--nn); box-shadow:inset 0 0 0 3px #fff; }
+#nlt-root .frl { font-size:14px; color:var(--ni); }
+#nlt-root .frdesc { font-size:11px; color:var(--nm); line-height:1.5; padding-left:24px; }
+#nlt-root .f textarea { resize:vertical; min-height:88px; line-height:1.6; }
+#nlt-root .subw { margin-top:36px; display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+#nlt-root .subn { font-size:11px; color:#bbb; letter-spacing:.04em; }
+#nlt-root .btn {
+  display:inline-flex; align-items:center; gap:11px;
+  background:var(--nn); color:#fff; border:none !important; border-radius:2px;
+  padding:16px 36px; cursor:pointer; font-family:"DM Sans",sans-serif !important;
+  font-size:13px; font-weight:500; letter-spacing:.12em; text-transform:uppercase;
+  position:relative; overflow:hidden; transition:color .3s;
 }
-#nlt-root .n-btn::before { content: ""; position: absolute; left: 0; top: 0; width: 3px; height: 100%; background: var(--n-sky); transition: width .3s; }
-#nlt-root .n-btn:hover::before { width: 100%; }
-#nlt-root .n-btn:hover { color: var(--n-navy); }
-#nlt-root .n-btn > * { position: relative; z-index: 1; }
-#nlt-root .n-btn:disabled { opacity: .55; cursor: not-allowed; }
-#nlt-root .n-spin { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: nlt-spin .7s linear infinite; display: none; }
-#nlt-root .n-btn.loading .n-spin { display: block; }
-
-/* toast */
-#nlt-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px); padding: 13px 22px; border-radius: 3px; font-family: "DM Sans", sans-serif; font-size: 14px; opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; z-index: 99999; white-space: nowrap; }
-#nlt-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-#nlt-toast.ok  { background: var(--n-navy); color: #fff; }
-#nlt-toast.err { background: var(--n-err); color: #fff; }
-
-@keyframes nlt-spin { to { transform: rotate(360deg); } }
+#nlt-root .btn::before { content:""; position:absolute; left:0; top:0; width:3px; height:100%; background:var(--ns); transition:width .3s; }
+#nlt-root .btn:hover::before { width:100%; }
+#nlt-root .btn:hover { color:var(--nn); }
+#nlt-root .btn > * { position:relative; z-index:1; }
+#nlt-root .btn:disabled { opacity:.55; cursor:not-allowed; }
+#nlt-root .spin { width:15px; height:15px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:nlt-spin .7s linear infinite; display:none; }
+#nlt-root .btn.loading .spin { display:block; }
+#nlt-toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(20px); padding:13px 22px; border-radius:3px; font-family:"DM Sans",sans-serif; font-size:14px; opacity:0; transition:opacity .3s,transform .3s; pointer-events:none; z-index:99999; white-space:nowrap; }
+#nlt-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+#nlt-toast.ok { background:var(--nn); color:#fff; }
+#nlt-toast.err { background:var(--ne); color:#fff; }
+@keyframes nlt-spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 <body>
 <div id="nlt-root">
 
-
-  <!-- ── HEADER ── -->
-  <div class="n-hd">
-    <div style="font-size:22px;font-weight:600;letter-spacing:.08em;color:#0d1e90;margin-bottom:4px">Double<span style="color:#1a35b8">D</span>solution</div>
-    <div class="n-ey">Portale DoubleDsolution</div>
+  <div class="hd">
+    <div class="brand">Double<span>D</span>solution</div>
+    <div class="ey">Portale DoubleDsolution</div>
     <h1>Noleggio a <em>Lungo Termine</em></h1>
-    <div class="n-rule"></div>
+    <div class="rule"></div>
   </div>
 
-  <!-- ── PROGRESS ── -->
-  <div class="n-prog">
-    <div class="n-prog-row"><span>Completamento</span><span id="nlt-pct">0%</span></div>
-    <div class="n-prog-track"><div class="n-prog-fill" id="nlt-fill"></div></div>
+  <div class="prog">
+    <div class="prog-row"><span>Completamento</span><span id="np">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="nf"></div></div>
   </div>
 
-  <!-- ── CARD ── -->
-  <div class="n-card">
-    <div class="n-bar"></div>
-    <div class="n-body" id="nlt-body">
+  <div class="card">
+    <div class="cbar"></div>
+    <div class="cbody" id="nb">
       <form id="nlt-form" novalidate>
 
-        <!-- 01 INTESTATARIO -->
-        <div class="n-sec">
-          <div class="n-sec-ttl">01 — Intestatario</div>
-          <div class="n-f" style="margin-bottom:20px">
+        <div class="sec">
+          <div class="sttl">01 — Intestatario</div>
+          <div class="f" style="margin-bottom:20px">
             <label>Tipo Intestatario <span class="req">*</span></label>
-            <div class="n-pills">
-              <button type="button" class="n-pill on" id="nlt-paz" onclick="NLT.tipo('Azienda')">🏢&nbsp; Azienda</button>
-              <button type="button" class="n-pill" id="nlt-ppr" onclick="NLT.tipo('Privato')">👤&nbsp; Privato</button>
+            <div class="pills">
+              <button type="button" class="pill on" id="paz" onclick="NLT.tipo('Azienda')">🏢&nbsp; Azienda</button>
+              <button type="button" class="pill" id="ppr" onclick="NLT.tipo('Privato')">👤&nbsp; Privato</button>
             </div>
-            <input type="hidden" id="nlt-tipo" value="Azienda">
+            <input type="hidden" id="ntipo" value="Azienda">
           </div>
-          <div class="n-g2">
-            <div class="n-f" id="nlt-f-nome">
-              <label id="nlt-lnome">Nome Azienda <span class="req">*</span></label>
-              <input type="text" id="nlt-nome" placeholder="Ragione sociale" autocomplete="organization">
-              <span class="n-err">Campo obbligatorio</span>
+          <div class="g2">
+            <div class="f" id="ff-nome">
+              <label id="lnome">Nome Azienda <span class="req">*</span></label>
+              <input type="text" id="nnome" placeholder="Ragione sociale">
+              <span class="err">Campo obbligatorio</span>
             </div>
-            <div class="n-f" id="nlt-f-piva">
-              <label id="nlt-lpiva">Partita IVA <span class="req">*</span></label>
-              <input type="text" id="nlt-piva" placeholder="IT12345678901" maxlength="13">
-              <span class="n-err">Campo obbligatorio</span>
+            <div class="f" id="ff-piva">
+              <label id="lpiva">Partita IVA <span class="req">*</span></label>
+              <input type="text" id="npiva" placeholder="IT12345678901" maxlength="13">
+              <span class="err">Campo obbligatorio</span>
             </div>
           </div>
         </div>
 
-        <!-- 02 REFERENTE -->
-        <div class="n-sec">
-          <div class="n-sec-ttl">02 — Referente</div>
-          <div class="n-g2">
-            <div class="n-f" id="nlt-f-ref">
+        <div class="sec">
+          <div class="sttl">02 — Referente</div>
+          <div class="g2">
+            <div class="f" id="ff-ref">
               <label>Nome Referente <span class="req">*</span></label>
-              <input type="text" id="nlt-ref" placeholder="Nome e Cognome" autocomplete="name">
-              <span class="n-err">Campo obbligatorio</span>
+              <input type="text" id="nref" placeholder="Nome e Cognome">
+              <span class="err">Campo obbligatorio</span>
             </div>
-            <div class="n-f" id="nlt-f-tel">
-              <label>Recapito Telefonico <span class="req">*</span></label>
-              <input type="tel" id="nlt-tel" placeholder="+39 000 000 0000" autocomplete="tel">
-              <span class="n-err">Numero non valido</span>
+            <div class="f" id="ff-tel">
+              <label>Telefono <span class="req">*</span></label>
+              <input type="tel" id="ntel" placeholder="+39 000 000 0000">
+              <span class="err">Numero non valido</span>
             </div>
-            <div class="n-f" id="nlt-f-email" style="grid-column:1/-1">
+            <div class="f" id="ff-email" style="grid-column:1/-1">
               <label>Email <span class="req">*</span></label>
-              <input type="email" id="nlt-email" placeholder="nome@azienda.it" autocomplete="email">
-              <span class="n-err">Email non valida</span>
+              <input type="email" id="nemail" placeholder="nome@azienda.it">
+              <span class="err">Email non valida</span>
             </div>
           </div>
         </div>
 
-        <!-- 03 VEICOLO -->
-        <div class="n-sec">
-          <div class="n-sec-ttl">03 — Veicolo Desiderato</div>
-          <div class="n-g2">
-            <div class="n-f" id="nlt-f-marca">
+        <div class="sec">
+          <div class="sttl">03 — Veicolo Desiderato</div>
+          <div class="g2">
+            <div class="f" id="ff-marca">
               <label>Marca <span class="req">*</span></label>
-              <div class="n-sw">
-                <select id="nlt-marca"></select>
-              </div>
-              <span class="n-err">Seleziona una marca</span>
+              <div class="sw"><select id="nmarca"></select></div>
+              <span class="err">Seleziona una marca</span>
             </div>
-            <div class="n-f" id="nlt-f-modello">
+            <div class="f" id="ff-modello">
               <label>Modello <span class="req">*</span></label>
-              <input type="text" id="nlt-modello" placeholder="es. Giulia, Serie 3…">
-              <span class="n-err">Campo obbligatorio</span>
+              <input type="text" id="nmodello" placeholder="es. Giulia, Serie 3...">
+              <span class="err">Campo obbligatorio</span>
             </div>
           </div>
         </div>
 
-        <!-- 04 CONTRATTO -->
-        <div class="n-sec">
-          <div class="n-sec-ttl">04 — Parametri Contratto</div>
-          <div class="n-f" style="margin-bottom:26px">
+        <div class="sec">
+          <div class="sttl">04 — Parametri Contratto</div>
+          <div class="f" style="margin-bottom:26px">
             <label>Durata <span class="req">*</span></label>
-            <div class="n-pills">
-              <button type="button" class="n-pill" onclick="NLT.durata('24',this)">24 mesi</button>
-              <button type="button" class="n-pill on" onclick="NLT.durata('36',this)">36 mesi</button>
-              <button type="button" class="n-pill" onclick="NLT.durata('48',this)">48 mesi</button>
-              <button type="button" class="n-pill" onclick="NLT.durata('60',this)">60 mesi</button>
+            <div class="pills">
+              <button type="button" class="pill" onclick="NLT.durata('24',this)">24 mesi</button>
+              <button type="button" class="pill on" onclick="NLT.durata('36',this)">36 mesi</button>
+              <button type="button" class="pill" onclick="NLT.durata('48',this)">48 mesi</button>
+              <button type="button" class="pill" onclick="NLT.durata('60',this)">60 mesi</button>
             </div>
-            <input type="hidden" id="nlt-durata" value="36">
+            <input type="hidden" id="ndurata" value="36">
           </div>
-          <div class="n-f" style="margin-bottom:26px">
+          <div class="f" style="margin-bottom:26px">
             <label>Km Totali Previsti <span class="req">*</span></label>
-            <div class="n-km-disp"><span id="nlt-kmv">40.000</span> <small>km totali</small></div>
-            <input type="range" id="nlt-kms" min="10000" max="200000" step="5000" value="40000" oninput="NLT.km(this.value)">
-            <div class="n-km-ticks"><span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span></div>
-            <input type="hidden" id="nlt-km" value="40000">
+            <div class="kmd"><span id="nkmv">40.000</span> <small>km totali</small></div>
+            <input type="range" id="nkms" min="10000" max="200000" step="5000" value="40000" oninput="NLT.km(this.value)">
+            <div class="kmtk"><span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span></div>
+            <input type="hidden" id="nkm" value="40000">
           </div>
-          <div class="n-f">
+          <div class="f">
             <label>Franchigia <span class="req">*</span></label>
-            <div class="n-fr-grid">
-              <div class="n-fr-card on" id="nlt-fr-no" onclick="NLT.franchigia('No')">
-                <div class="n-fr-top"><div class="n-fr-dot"></div><div class="n-fr-lbl">No, senza franchigia</div></div>
-                <div class="n-fr-desc">Nessuna franchigia in caso di sinistro</div>
+            <div class="frg">
+              <div class="frc on" id="frno" onclick="NLT.fr('No')">
+                <div class="frt"><div class="frd"></div><div class="frl">No, senza franchigia</div></div>
+                <div class="frdesc">Nessuna franchigia in caso di sinistro</div>
               </div>
-              <div class="n-fr-card" id="nlt-fr-si" onclick="NLT.franchigia('Si')">
-                <div class="n-fr-top"><div class="n-fr-dot"></div><div class="n-fr-lbl">Si, con franchigia</div></div>
-                <div class="n-fr-desc">Franchigia da definire nel contratto</div>
+              <div class="frc" id="frsi" onclick="NLT.fr('Si')">
+                <div class="frt"><div class="frd"></div><div class="frl">Si, con franchigia</div></div>
+                <div class="frdesc">Franchigia da definire nel contratto</div>
               </div>
             </div>
-            <input type="hidden" id="nlt-franchigia" value="No">
+            <input type="hidden" id="nfr" value="No">
           </div>
         </div>
 
-        <!-- 05 NOTE -->
-        <div class="n-sec">
-          <div class="n-sec-ttl">05 — Note Aggiuntive</div>
-          <div class="n-f">
+        <div class="sec">
+          <div class="sttl">05 — Note Aggiuntive</div>
+          <div class="f">
             <label>Note <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none;letter-spacing:0">(opzionale)</span></label>
-            <textarea id="nlt-note" placeholder="Colore, optional, esigenze particolari…"></textarea>
+            <textarea id="nnote" placeholder="Colore, optional, esigenze particolari..."></textarea>
           </div>
         </div>
 
-        <div class="n-sub-wrap">
-          <div class="n-sub-note">* Campi obbligatori — Dati trattati ai sensi del GDPR</div>
-          <button type="submit" class="n-btn" id="nlt-btn">
-            <div class="n-spin"></div>
+        <div class="subw">
+          <div class="subn">* Campi obbligatori — Dati trattati ai sensi del GDPR</div>
+          <button type="submit" class="btn" id="nbtn">
+            <div class="spin"></div>
             <span>Invia Richiesta</span>
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -308,11 +240,11 @@
 <div id="nlt-toast"></div>
 
 <script>
-// ╔═══════════════════════════════════════════╗
-// ║  CONFIGURA QUI LA TUA API KEY             ║
-var NLT_KEY = 'hLIsy9O2ksLjcTRw4Fgl';
-var NLT_SUB = 'doubledsolution';
-// ╚═══════════════════════════════════════════╝
+// ╔══════════════════════════════════════════════════════╗
+// ║  UNICA RIGA DA MODIFICARE:                           ║
+// ║  Sostituisci con l URL del tuo Cloudflare Worker     ║
+var WORKER = 'https://nlt-proxy.TUONOME.workers.dev';
+// ╚══════════════════════════════════════════════════════╝
 
 const CAR_BRANDS = [
   { id:"abarth",         name:"Abarth",            flag:"🇮🇹", origin:"italiana",   models:["500e Scorpionissima","600e"] },
@@ -397,174 +329,150 @@ const CAR_BRANDS = [
 window.NLT = (function(){
   'use strict';
 
-  /* ── init marca select ── */
   function initMarca(){
-    var sel = document.getElementById('nlt-marca');
-    if(!sel) return;
-    var opt0 = document.createElement('option');
-    opt0.value = ''; opt0.textContent = '— Seleziona marca —';
-    sel.appendChild(opt0);
-    for(var i=0; i<CAR_BRANDS.length; i++){
-      var o = document.createElement('option');
-      o.value = CAR_BRANDS[i].name;
-      o.textContent = CAR_BRANDS[i].name;
-      sel.appendChild(o);
+    var s = document.getElementById('nmarca');
+    var o = document.createElement('option');
+    o.value=''; o.textContent='— Seleziona marca —';
+    s.appendChild(o);
+    for(var i=0;i<CAR_BRANDS.length;i++){
+      var op=document.createElement('option');
+      op.value=CAR_BRANDS[i].name;
+      op.textContent=CAR_BRANDS[i].name;
+      s.appendChild(op);
     }
-    sel.addEventListener('change', function(){
-      clr('nlt-f-marca'); prog();
-    });
+    s.addEventListener('change',function(){ clr('ff-marca'); prog(); });
   }
 
-  /* ── tipo intestatario ── */
   function tipo(v){
-    document.getElementById('nlt-tipo').value = v;
-    document.getElementById('nlt-paz').classList.toggle('on', v==='Azienda');
-    document.getElementById('nlt-ppr').classList.toggle('on', v==='Privato');
-    var ln = document.getElementById('nlt-lnome');
-    var lp = document.getElementById('nlt-lpiva');
-    var inp = document.getElementById('nlt-nome');
-    var ipp = document.getElementById('nlt-piva');
+    document.getElementById('ntipo').value=v;
+    document.getElementById('paz').classList.toggle('on',v==='Azienda');
+    document.getElementById('ppr').classList.toggle('on',v==='Privato');
+    var ln=document.getElementById('lnome'),lp=document.getElementById('lpiva');
+    var in_=document.getElementById('nnome'),ip=document.getElementById('npiva');
     if(v==='Privato'){
-      ln.innerHTML = 'Nome e Cognome <span class="req">*</span>';
-      lp.innerHTML = 'Codice Fiscale <span class="req">*</span>';
-      inp.placeholder = 'Nome e Cognome';
-      ipp.placeholder = 'RSSMRA80A01H501U';
-      ipp.maxLength = 16;
+      ln.innerHTML='Nome e Cognome <span class="req">*</span>';
+      lp.innerHTML='Codice Fiscale <span class="req">*</span>';
+      in_.placeholder='Nome e Cognome'; ip.placeholder='RSSMRA80A01H501U'; ip.maxLength=16;
     } else {
-      ln.innerHTML = 'Nome Azienda <span class="req">*</span>';
-      lp.innerHTML = 'Partita IVA <span class="req">*</span>';
-      inp.placeholder = 'Ragione sociale';
-      ipp.placeholder = 'IT12345678901';
-      ipp.maxLength = 13;
+      ln.innerHTML='Nome Azienda <span class="req">*</span>';
+      lp.innerHTML='Partita IVA <span class="req">*</span>';
+      in_.placeholder='Ragione sociale'; ip.placeholder='IT12345678901'; ip.maxLength=13;
     }
     prog();
   }
 
-  /* ── durata pills ── */
-  function durata(v, btn){
-    document.getElementById('nlt-durata').value = v;
-    var pills = btn.closest('.n-pills').querySelectorAll('.n-pill');
-    for(var i=0;i<pills.length;i++) pills[i].classList.remove('on');
+  function durata(v,btn){
+    document.getElementById('ndurata').value=v;
+    var ps=btn.closest('.pills').querySelectorAll('.pill');
+    for(var i=0;i<ps.length;i++) ps[i].classList.remove('on');
     btn.classList.add('on');
   }
 
-  /* ── km slider ── */
   function km(v){
-    var n = parseInt(v);
-    document.getElementById('nlt-kmv').textContent = n.toLocaleString('it-IT');
-    document.getElementById('nlt-km').value = v;
-    var pct = ((n-10000)/190000*100).toFixed(1);
-    document.getElementById('nlt-kms').style.setProperty('--pct', pct+'%');
+    var n=parseInt(v);
+    document.getElementById('nkmv').textContent=n.toLocaleString('it-IT');
+    document.getElementById('nkm').value=v;
+    document.getElementById('nkms').style.setProperty('--pct',((n-10000)/190000*100).toFixed(1)+'%');
   }
 
-  /* ── franchigia ── */
-  function franchigia(v){
-    document.getElementById('nlt-franchigia').value = v;
-    document.getElementById('nlt-fr-no').classList.toggle('on', v==='No');
-    document.getElementById('nlt-fr-si').classList.toggle('on', v==='Si');
+  function fr(v){
+    document.getElementById('nfr').value=v;
+    document.getElementById('frno').classList.toggle('on',v==='No');
+    document.getElementById('frsi').classList.toggle('on',v==='Si');
   }
 
-  /* ── progress ── */
-  var RQ = ['nlt-nome','nlt-piva','nlt-ref','nlt-tel','nlt-email','nlt-marca','nlt-modello'];
+  var RQ=['nnome','npiva','nref','ntel','nemail','nmarca','nmodello'];
+
   function prog(){
-    var f=3, t=RQ.length+3;
+    var f=3,t=RQ.length+3;
     for(var i=0;i<RQ.length;i++){
       var el=document.getElementById(RQ[i]);
-      if(el && el.value.trim()) f++;
+      if(el&&el.value.trim()) f++;
     }
-    var p = Math.round(f/t*100);
-    document.getElementById('nlt-fill').style.width = p+'%';
-    document.getElementById('nlt-pct').textContent = p+'%';
+    var p=Math.round(f/t*100);
+    document.getElementById('nf').style.width=p+'%';
+    document.getElementById('np').textContent=p+'%';
   }
 
-  /* ── clear error ── */
-  function clr(fid){
-    var el=document.getElementById(fid);
-    if(el) el.classList.remove('n-bad');
-  }
+  function clr(id){ var el=document.getElementById(id); if(el) el.classList.remove('bad'); }
 
-  /* ── validation ── */
   function validate(){
     var ok=true;
-    function e(fid,show){
-      var el=document.getElementById(fid);
-      if(el) el.classList.toggle('n-bad',show);
+    function e(id,show){
+      var el=document.getElementById(id);
+      if(el) el.classList.toggle('bad',show);
       if(show) ok=false;
     }
-    e('nlt-f-nome',   !document.getElementById('nlt-nome').value.trim());
-    e('nlt-f-piva',   !document.getElementById('nlt-piva').value.trim());
-    e('nlt-f-ref',    !document.getElementById('nlt-ref').value.trim());
-    e('nlt-f-tel',    !/^[\+\d\s\-\(\)]{7,}$/.test(document.getElementById('nlt-tel').value.trim()));
-    e('nlt-f-email',  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('nlt-email').value.trim()));
-    e('nlt-f-marca',  !document.getElementById('nlt-marca').value);
-    e('nlt-f-modello',!document.getElementById('nlt-modello').value.trim());
+    e('ff-nome',  !document.getElementById('nnome').value.trim());
+    e('ff-piva',  !document.getElementById('npiva').value.trim());
+    e('ff-ref',   !document.getElementById('nref').value.trim());
+    e('ff-tel',   !/^[\+\d\s\-\(\)]{7,}$/.test(document.getElementById('ntel').value.trim()));
+    e('ff-email', !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('nemail').value.trim()));
+    e('ff-marca', !document.getElementById('nmarca').value);
+    e('ff-modello',!document.getElementById('nmodello').value.trim());
     return ok;
   }
 
-  /* ── descrizione HTML ticket ── */
   function desc(d){
-    var r = '<h3>Richiesta Noleggio a Lungo Termine</h3>';
-    r += '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:13px">';
-    r += '<tr><td><b>Tipo</b></td><td>'+d.tipo+'</td></tr>';
-    r += '<tr><td><b>'+(d.tipo==='Privato'?'Nome e Cognome':'Nome Azienda')+'</b></td><td>'+d.nome+'</td></tr>';
-    r += '<tr><td><b>'+(d.tipo==='Privato'?'Codice Fiscale':'Partita IVA')+'</b></td><td>'+d.piva+'</td></tr>';
-    r += '<tr><td><b>Referente</b></td><td>'+d.ref+'</td></tr>';
-    r += '<tr><td><b>Telefono</b></td><td>'+d.tel+'</td></tr>';
-    r += '<tr><td><b>Email</b></td><td>'+d.email+'</td></tr>';
-    r += '<tr><td><b>Marca</b></td><td>'+d.marca+'</td></tr>';
-    r += '<tr><td><b>Modello</b></td><td>'+d.modello+'</td></tr>';
-    r += '<tr><td><b>Durata</b></td><td>'+d.durata+' mesi</td></tr>';
-    r += '<tr><td><b>Km Totali</b></td><td>'+parseInt(d.km).toLocaleString('it-IT')+' km</td></tr>';
-    r += '<tr><td><b>Franchigia</b></td><td>'+d.franchigia+'</td></tr>';
-    if(d.note) r += '<tr><td><b>Note</b></td><td>'+d.note+'</td></tr>';
-    r += '</table>';
+    var r='<h3>Richiesta Noleggio a Lungo Termine</h3>';
+    r+='<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:13px">';
+    r+='<tr><td><b>Tipo</b></td><td>'+d.tipo+'</td></tr>';
+    r+='<tr><td><b>'+(d.tipo==='Privato'?'Nome e Cognome':'Nome Azienda')+'</b></td><td>'+d.nome+'</td></tr>';
+    r+='<tr><td><b>'+(d.tipo==='Privato'?'Codice Fiscale':'Partita IVA')+'</b></td><td>'+d.piva+'</td></tr>';
+    r+='<tr><td><b>Referente</b></td><td>'+d.ref+'</td></tr>';
+    r+='<tr><td><b>Telefono</b></td><td>'+d.tel+'</td></tr>';
+    r+='<tr><td><b>Email</b></td><td>'+d.email+'</td></tr>';
+    r+='<tr><td><b>Marca</b></td><td>'+d.marca+'</td></tr>';
+    r+='<tr><td><b>Modello</b></td><td>'+d.modello+'</td></tr>';
+    r+='<tr><td><b>Durata</b></td><td>'+d.durata+' mesi</td></tr>';
+    r+='<tr><td><b>Km Totali</b></td><td>'+parseInt(d.km).toLocaleString('it-IT')+' km</td></tr>';
+    r+='<tr><td><b>Franchigia</b></td><td>'+d.fr+'</td></tr>';
+    if(d.note) r+='<tr><td><b>Note</b></td><td>'+d.note+'</td></tr>';
+    r+='</table>';
     return r;
   }
 
-  /* ── toast ── */
   function toast(msg,t){
     var el=document.getElementById('nlt-toast');
     el.textContent=msg; el.className='show '+(t||'ok');
     setTimeout(function(){ el.className=''; },5000);
   }
 
-  /* ── submit ── */
-  function onSubmit(ev){
+  function submit(ev){
     ev.preventDefault();
     if(!validate()){
-      var f=document.querySelector('#nlt-root .n-bad input, #nlt-root .n-bad select');
+      var f=document.querySelector('#nlt-root .bad input,#nlt-root .bad select');
       if(f) f.scrollIntoView({behavior:'smooth',block:'center'});
       return;
     }
-    var key = NLT_KEY || (document.getElementById('nlt-apikey-input')?document.getElementById('nlt-apikey-input').value.trim():'');
-    if(!key){ toast('Inserisci la API Key Freshdesk nel campo in cima','err'); return; }
-
-    var btn=document.getElementById('nlt-btn');
+    if(WORKER.indexOf('TUONOME')!==-1){
+      toast('Aggiorna la variabile WORKER con il tuo URL Cloudflare','err');
+      return;
+    }
+    var btn=document.getElementById('nbtn');
     btn.classList.add('loading'); btn.disabled=true;
-
     var d={
-      tipo:      document.getElementById('nlt-tipo').value,
-      nome:      document.getElementById('nlt-nome').value.trim(),
-      piva:      document.getElementById('nlt-piva').value.trim(),
-      ref:       document.getElementById('nlt-ref').value.trim(),
-      tel:       document.getElementById('nlt-tel').value.trim(),
-      email:     document.getElementById('nlt-email').value.trim(),
-      marca:     document.getElementById('nlt-marca').value,
-      modello:   document.getElementById('nlt-modello').value.trim(),
-      durata:    document.getElementById('nlt-durata').value,
-      km:        document.getElementById('nlt-km').value,
-      franchigia:document.getElementById('nlt-franchigia').value,
-      note:      document.getElementById('nlt-note').value.trim()
+      tipo:  document.getElementById('ntipo').value,
+      nome:  document.getElementById('nnome').value.trim(),
+      piva:  document.getElementById('npiva').value.trim(),
+      ref:   document.getElementById('nref').value.trim(),
+      tel:   document.getElementById('ntel').value.trim(),
+      email: document.getElementById('nemail').value.trim(),
+      marca: document.getElementById('nmarca').value,
+      modello: document.getElementById('nmodello').value.trim(),
+      durata: document.getElementById('ndurata').value,
+      km:    document.getElementById('nkm').value,
+      fr:    document.getElementById('nfr').value,
+      note:  document.getElementById('nnote').value.trim()
     };
-
     var payload={
-      subject:     'NLT — '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
+      subject:    'NLT — '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
       description: desc(d),
-      email:       d.email,
-      name:        d.ref,
-      phone:       d.tel,
-      priority:    2,
-      tags:        ['nlt','noleggio-lungo-termine'],
+      email:      d.email,
+      name:       d.ref,
+      phone:      d.tel,
+      priority:   2,
+      tags:       ['nlt','noleggio-lungo-termine'],
       custom_fields:{
         cf_tipo_intestatario: d.tipo,
         cf_piva_cf:           d.piva,
@@ -572,16 +480,12 @@ window.NLT = (function(){
         cf_modello:           d.modello,
         cf_durata_mesi:       parseInt(d.durata),
         cf_km_totali:         parseInt(d.km),
-        cf_franchigia:        d.franchigia==='Si'
+        cf_franchigia:        d.fr==='Si'
       }
     };
-
-    fetch('https://'+NLT_SUB+'.freshdesk.com/api/v2/tickets',{
+    fetch(WORKER,{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Basic '+btoa(key+':X')
-      },
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify(payload)
     })
     .then(function(r){
@@ -589,18 +493,16 @@ window.NLT = (function(){
       return r.json();
     })
     .then(function(t){
-      document.getElementById('nlt-fill').style.width='100%';
-      document.getElementById('nlt-pct').textContent='100%';
-      document.getElementById('nlt-body').innerHTML=
-        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:64px 32px;text-align:center">'+
+      document.getElementById('nf').style.width='100%';
+      document.getElementById('np').textContent='100%';
+      document.getElementById('nb').innerHTML=
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:64px 32px;text-align:center">'+
         '<div style="width:60px;height:60px;border-radius:50%;background:rgba(39,174,96,.1);display:flex;align-items:center;justify-content:center">'+
         '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
         '<div style="font-family:Cormorant Garamond,serif;font-size:34px;font-weight:300;color:#0d1e90">Richiesta Inviata</div>'+
         (t.id?'<div style="font-size:13px;color:#3a4e8c">Ticket <strong>#'+t.id+'</strong> creato in Freshdesk</div>':'')+
         '<div style="font-size:14px;color:#3a4e8c;max-width:360px;line-height:1.7">Il team DoubleDsolution contatterà <strong>'+d.ref+'</strong> entro 24 ore lavorative.</div>'+
         '</div>';
-      var strip=document.getElementById('nlt-api-strip');
-      if(strip) strip.style.display='none';
     })
     .catch(function(err){
       toast('Errore: '+(err.message||'Riprova'),'err');
@@ -608,31 +510,30 @@ window.NLT = (function(){
     });
   }
 
-  /* ── init ── */
   function init(){
     initMarca();
     km(40000);
     var form=document.getElementById('nlt-form');
-    if(form) form.addEventListener('submit', onSubmit);
-    var rq=RQ;
-    for(var i=0;i<rq.length;i++){
+    if(form) form.addEventListener('submit',submit);
+    for(var i=0;i<RQ.length;i++){
       (function(id){
         var el=document.getElementById(id);
         if(!el) return;
-        el.addEventListener('input', prog);
-        el.addEventListener('change', prog);
-        el.addEventListener('input', function(){ clr('nlt-f-'+id.replace('nlt-','')); });
-      })(rq[i]);
+        el.addEventListener('input',prog);
+        el.addEventListener('change',prog);
+        el.addEventListener('input',function(){
+          var fid='ff-'+id.replace('n','');
+          clr(fid);
+        });
+      })(RQ[i]);
     }
   }
 
   if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+    document.addEventListener('DOMContentLoaded',init);
+  } else { init(); }
 
-  return { tipo:tipo, durata:durata, km:km, franchigia:franchigia };
+  return { tipo:tipo, durata:durata, km:km, fr:fr };
 })();
 </script>
 </body>
