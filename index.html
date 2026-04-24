@@ -307,20 +307,20 @@ window.NLT=(function(){
     return ok;
   }
   function desc(d){
-    var r='<h3>Richiesta NLT</h3><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:13px">';
-    r+='<tr><td><b>Tipo</b></td><td>'+d.tipo+'</td></tr>';
-    r+='<tr><td><b>'+(d.tipo==='Privato'?'Nome e Cognome':'Nome Azienda')+'</b></td><td>'+d.nome+'</td></tr>';
-    r+='<tr><td><b>'+(d.tipo==='Privato'?'Codice Fiscale':'Partita IVA')+'</b></td><td>'+d.piva+'</td></tr>';
-    r+='<tr><td><b>Referente</b></td><td>'+d.ref+'</td></tr>';
-    r+='<tr><td><b>Telefono</b></td><td>'+d.tel+'</td></tr>';
-    r+='<tr><td><b>Email</b></td><td>'+d.email+'</td></tr>';
-    r+='<tr><td><b>Marca</b></td><td>'+d.marca+'</td></tr>';
-    r+='<tr><td><b>Modello</b></td><td>'+d.modello+'</td></tr>';
-    r+='<tr><td><b>Durata</b></td><td>'+d.durata+' mesi</td></tr>';
-    r+='<tr><td><b>Km Totali</b></td><td>'+parseInt(d.km).toLocaleString('it-IT')+' km</td></tr>';
-    r+='<tr><td><b>Franchigia</b></td><td>'+d.fr+'</td></tr>';
-    if(d.note)r+='<tr><td><b>Note</b></td><td>'+d.note+'</td></tr>';
-    return r+'</table>';
+    var r='Richiesta Noleggio a Lungo Termine\n\n';
+    r+='Tipo: '+d.tipo+'\n';
+    r+=(d.tipo==='Privato'?'Nome e Cognome: ':'Nome Azienda: ')+d.nome+'\n';
+    r+=(d.tipo==='Privato'?'Codice Fiscale: ':'Partita IVA: ')+d.piva+'\n';
+    r+='Referente: '+d.ref+'\n';
+    r+='Telefono: '+d.tel+'\n';
+    r+='Email: '+d.email+'\n';
+    r+='Marca: '+d.marca+'\n';
+    r+='Modello: '+d.modello+'\n';
+    r+='Durata: '+d.durata+' mesi\n';
+    r+='Km Totali: '+parseInt(d.km).toLocaleString('it-IT')+' km\n';
+    r+='Franchigia: '+d.fr+'\n';
+    if(d.note) r+='Note: '+d.note+'\n';
+    return r;
   }
   function toast(msg,t){var el=document.getElementById('nlt-toast');el.textContent=msg;el.className='show '+(t||'ok');setTimeout(function(){el.className='';},5000);}
   function submit(ev){
@@ -343,14 +343,11 @@ window.NLT=(function(){
       note:document.getElementById('nnote').value.trim()
     };
     var payload={
-      fd_subject:'NLT \u2014 '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
+      fd_subject:'NLT - '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
       fd_description:desc(d),
       fd_email:d.email,
       fd_name:d.ref,
-      fd_phone:d.tel,
-      fd_priority:2,
-      fd_tags:['nlt','noleggio-lungo-termine'],
-      dati:d
+      fd_phone:d.tel
     };
     fetch(MAKE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
     .then(function(r){
