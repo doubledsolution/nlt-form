@@ -343,11 +343,18 @@ window.NLT=(function(){
       note:document.getElementById('nnote').value.trim()
     };
     var payload={
-      fd_subject:'NLT - '+d.marca+' '+d.modello+' ('+d.durata+' mesi)',
-      fd_description:desc(d),
-      fd_email:d.email,
-      fd_name:d.ref,
-      fd_phone:d.tel
+      tipo:    d.tipo,
+      nome:    d.nome,
+      piva:    d.piva,
+      ref:     d.ref,
+      tel:     d.tel,
+      email:   d.email,
+      marca:   d.marca,
+      modello: d.modello,
+      durata:  d.durata,
+      km:      parseInt(d.km).toLocaleString('it-IT'),
+      fr:      d.fr,
+      note:    d.note || ''
     };
     fetch(MAKE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
     .then(function(r){
