@@ -1,111 +1,504 @@
-/**
- * Cloudflare Worker — NLT API Proxy → Freshdesk
- * Solo /api/ticket (POST) — GitHub Pages serve l'HTML
- *
- * Variabile d'ambiente richiesta:
- *   FD_API_KEY  →  API key Freshdesk (cifrata)
- */
-
 const FD_ENDPOINT = 'https://doubledsolution.freshdesk.com/api/v2/tickets';
 
-const CORS = {
-  'Access-Control-Allow-Origin' : '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const HTML = `<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richiesta Noleggio a Lungo Termine — DoubleDsolution</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+#nlt-root{all:initial;display:block;font-family:"DM Sans",sans-serif}
+#nlt-root *,#nlt-root *::before,#nlt-root *::after{box-sizing:border-box;margin:0;padding:0}
+#nlt-root{--ni:#0a1235;--nn:#0d1e90;--nb:#1a35b8;--ns:#5090f0;--nc:#eef2ff;--na:#c8d4f8;--nm:#3a4e8c;--ne:#c0392b;color:var(--ni);max-width:720px;margin:0 auto;padding:32px 16px 80px}
+#nlt-root .hd{text-align:center;margin-bottom:28px}
+#nlt-root .hd .brand{font-size:24px;font-weight:600;letter-spacing:.06em;color:var(--nn);margin-bottom:4px}
+#nlt-root .hd .brand span{color:var(--nb)}
+#nlt-root .hd .ey{font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--nb);margin-bottom:10px}
+#nlt-root .hd h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(28px,4vw,44px);color:var(--nn);line-height:1.1}
+#nlt-root .hd h1 em{font-style:italic;color:var(--nb)}
+#nlt-root .hd .rule{width:44px;height:1px;background:var(--nb);margin:14px auto 0;opacity:.45}
+#nlt-root .prog{margin-bottom:18px}
+#nlt-root .prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--nm);letter-spacing:.07em;margin-bottom:7px}
+#nlt-root .prog-track{height:2px;background:var(--na);border-radius:2px}
+#nlt-root .prog-fill{height:100%;background:linear-gradient(90deg,var(--nn),var(--ns));border-radius:2px;transition:width .4s ease;width:0%}
+#nlt-root .card{background:#fff;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.08);overflow:hidden}
+#nlt-root .cbar{height:3px;background:linear-gradient(90deg,var(--nn),var(--ns),transparent)}
+#nlt-root .cbody{padding:40px 48px}
+@media(max-width:560px){#nlt-root .cbody{padding:28px 20px}}
+#nlt-root .sec{margin-bottom:36px}
+#nlt-root .sttl{font-family:"Cormorant Garamond",serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--nm);border-bottom:1px solid var(--na);padding-bottom:9px;margin-bottom:24px}
+#nlt-root .g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:520px){#nlt-root .g2{grid-template-columns:1fr}}
+#nlt-root .f{display:flex;flex-direction:column;gap:6px}
+#nlt-root .f>label{font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--nm)}
+#nlt-root .f .req{color:var(--nb)}
+#nlt-root .f input,#nlt-root .f select,#nlt-root .f textarea{font-family:"DM Sans",sans-serif!important;font-size:14px!important;font-weight:300!important;color:var(--ni)!important;background:var(--nc)!important;border:1px solid var(--na)!important;border-radius:2px!important;padding:12px 15px!important;outline:none!important;width:100%!important;appearance:none!important;-webkit-appearance:none!important;transition:border-color .2s,background .2s!important;box-shadow:none!important}
+#nlt-root .f input:focus,#nlt-root .f select:focus,#nlt-root .f textarea:focus{background:#fff!important;border-color:var(--nb)!important;box-shadow:0 0 0 3px rgba(26,53,184,.09)!important}
+#nlt-root .f input::placeholder,#nlt-root .f textarea::placeholder{color:#bbb!important}
+#nlt-root .f .err{font-size:11px;color:var(--ne);display:none}
+#nlt-root .f.bad .err{display:block}
+#nlt-root .f.bad input,#nlt-root .f.bad select{border-color:var(--ne)!important}
+#nlt-root .sw{position:relative}
+#nlt-root .sw::after{content:"";position:absolute;right:14px;top:50%;transform:translateY(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--nb);pointer-events:none}
+#nlt-root .pills{display:flex;border:1px solid var(--na);border-radius:2px;overflow:hidden}
+#nlt-root .pill{flex:1;background:var(--nc);border:none!important;padding:11px;font-family:"DM Sans",sans-serif;font-size:13px;color:var(--nm);cursor:pointer;transition:background .2s,color .2s;border-right:1px solid var(--na)!important}
+#nlt-root .pill:last-child{border-right:none!important}
+#nlt-root .pill.on{background:var(--nn);color:#fff}
+#nlt-root .kmd{text-align:right;font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--nn);margin-bottom:8px}
+#nlt-root .kmd small{font-size:13px;color:var(--nm);font-family:"DM Sans",sans-serif}
+#nlt-root .f input[type=range]{padding:0!important;background:transparent!important;border:none!important;box-shadow:none!important;cursor:pointer}
+#nlt-root .f input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--nn) 0%,var(--nn) var(--pct,20%),var(--na) var(--pct,20%))}
+#nlt-root .f input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--nn);border:2px solid #fff;box-shadow:0 2px 8px rgba(13,30,144,.35);margin-top:-8px}
+#nlt-root .f input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--nn);border:2px solid #fff}
+#nlt-root .kmtk{display:flex;justify-content:space-between;font-size:10px;color:#bbb;margin-top:6px}
+#nlt-root .frg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#nlt-root .frc{border:1px solid var(--na);border-radius:2px;padding:14px;cursor:pointer;transition:border-color .2s,background .2s;display:flex;flex-direction:column;gap:5px}
+#nlt-root .frc.on{border-color:var(--nn);background:rgba(13,30,144,.04)}
+#nlt-root .frt{display:flex;align-items:center;gap:9px}
+#nlt-root .frd{width:15px;height:15px;border-radius:50%;border:2px solid var(--na);flex-shrink:0;transition:all .2s}
+#nlt-root .frc.on .frd{border-color:var(--nn);background:var(--nn);box-shadow:inset 0 0 0 3px #fff}
+#nlt-root .frl{font-size:14px;color:var(--ni)}
+#nlt-root .frdesc{font-size:11px;color:var(--nm);line-height:1.5;padding-left:24px}
+#nlt-root .f textarea{resize:vertical;min-height:88px;line-height:1.6}
+#nlt-root .subw{margin-top:36px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#nlt-root .subn{font-size:11px;color:#bbb;letter-spacing:.04em}
+#nlt-root .btn{display:inline-flex;align-items:center;gap:11px;background:var(--nn);color:#fff;border:none!important;border-radius:2px;padding:16px 36px;cursor:pointer;font-family:"DM Sans",sans-serif!important;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;position:relative;overflow:hidden;transition:color .3s}
+#nlt-root .btn::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--ns);transition:width .3s}
+#nlt-root .btn:hover::before{width:100%}
+#nlt-root .btn:hover{color:var(--nn)}
+#nlt-root .btn>*{position:relative;z-index:1}
+#nlt-root .btn:disabled{opacity:.55;cursor:not-allowed}
+#nlt-root .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:nlt-spin .7s linear infinite;display:none}
+#nlt-root .btn.loading .spin{display:block}
+#nlt-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);padding:13px 22px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:99999;white-space:nowrap}
+#nlt-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#nlt-toast.ok{background:var(--nn);color:#fff}
+#nlt-toast.err{background:var(--ne);color:#fff}
+@keyframes nlt-spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="nlt-root">
+  <div class="hd">
+    <div class="brand">Double<span>D</span>solution</div>
+    <div class="ey">Portale DoubleDsolution</div>
+    <h1>Noleggio a <em>Lungo Termine</em></h1>
+    <div class="rule"></div>
+  </div>
+  <div class="prog">
+    <div class="prog-row"><span>Completamento</span><span id="np">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="nf"></div></div>
+  </div>
+  <div class="card">
+    <div class="cbar"></div>
+    <div class="cbody" id="nb">
+      <form id="nlt-form" novalidate>
+        <div class="sec">
+          <div class="sttl">01 — Intestatario</div>
+          <div class="f" style="margin-bottom:20px">
+            <label>Tipo Intestatario <span class="req">*</span></label>
+            <div class="pills">
+              <button type="button" class="pill on" id="paz" onclick="NLT.tipo('Azienda')">&#127970;&nbsp; Azienda</button>
+              <button type="button" class="pill" id="ppr" onclick="NLT.tipo('Privato')">&#128100;&nbsp; Privato</button>
+            </div>
+            <input type="hidden" id="ntipo" value="Azienda">
+          </div>
+          <div class="g2">
+            <div class="f" id="ff-nome"><label id="lnome">Nome Azienda <span class="req">*</span></label><input type="text" id="nnome" placeholder="Ragione sociale"><span class="err">Campo obbligatorio</span></div>
+            <div class="f" id="ff-piva"><label id="lpiva">Partita IVA <span class="req">*</span></label><input type="text" id="npiva" placeholder="IT12345678901" maxlength="13"><span class="err">Campo obbligatorio</span></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sttl">02 — Referente</div>
+          <div class="g2">
+            <div class="f" id="ff-ref"><label>Nome Referente <span class="req">*</span></label><input type="text" id="nref" placeholder="Nome e Cognome"><span class="err">Campo obbligatorio</span></div>
+            <div class="f" id="ff-tel"><label>Telefono <span class="req">*</span></label><input type="tel" id="ntel" placeholder="+39 000 000 0000"><span class="err">Numero non valido</span></div>
+            <div class="f" id="ff-email" style="grid-column:1/-1"><label>Email <span class="req">*</span></label><input type="email" id="nemail" placeholder="nome@azienda.it"><span class="err">Email non valida</span></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sttl">03 — Veicolo Desiderato</div>
+          <div class="g2">
+            <div class="f" id="ff-marca"><label>Marca <span class="req">*</span></label><div class="sw"><select id="nmarca"></select></div><span class="err">Seleziona una marca</span></div>
+            <div class="f" id="ff-modello"><label>Modello <span class="req">*</span></label><input type="text" id="nmodello" placeholder="es. Giulia, Serie 3..."><span class="err">Campo obbligatorio</span></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sttl">04 — Parametri Contratto</div>
+          <div class="f" style="margin-bottom:26px">
+            <label>Durata <span class="req">*</span></label>
+            <div class="pills">
+              <button type="button" class="pill" onclick="NLT.durata('24',this)">24 mesi</button>
+              <button type="button" class="pill on" onclick="NLT.durata('36',this)">36 mesi</button>
+              <button type="button" class="pill" onclick="NLT.durata('48',this)">48 mesi</button>
+              <button type="button" class="pill" onclick="NLT.durata('60',this)">60 mesi</button>
+            </div>
+            <input type="hidden" id="ndurata" value="36">
+          </div>
+          <div class="f" style="margin-bottom:26px">
+            <label>Km Totali Previsti <span class="req">*</span></label>
+            <div class="kmd"><span id="nkmv">40.000</span> <small>km totali</small></div>
+            <input type="range" id="nkms" min="10000" max="200000" step="5000" value="40000" oninput="NLT.km(this.value)">
+            <div class="kmtk"><span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span></div>
+            <input type="hidden" id="nkm" value="40000">
+          </div>
+          <div class="f">
+            <label>Franchigia <span class="req">*</span></label>
+            <div class="frg">
+              <div class="frc on" id="frno" onclick="NLT.fr('No')"><div class="frt"><div class="frd"></div><div class="frl">No, senza franchigia</div></div><div class="frdesc">Nessuna franchigia in caso di sinistro</div></div>
+              <div class="frc" id="frsi" onclick="NLT.fr('Si')"><div class="frt"><div class="frd"></div><div class="frl">Si, con franchigia</div></div><div class="frdesc">Franchigia da definire nel contratto</div></div>
+            </div>
+            <input type="hidden" id="nfr" value="No">
+          </div>
+        </div>
+        <div class="sec">
+          <div class="sttl">05 — Note Aggiuntive</div>
+          <div class="f"><label>Note <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none;letter-spacing:0">(opzionale)</span></label><textarea id="nnote" placeholder="Colore, optional, esigenze particolari..."></textarea></div>
+        </div>
+        <div class="subw">
+          <div class="subn">* Campi obbligatori — Dati trattati ai sensi del GDPR</div>
+          <button type="submit" class="btn" id="nbtn">
+            <div class="spin"></div>
+            <span>Invia Richiesta</span>
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="nlt-toast"></div>
+<script>
+// MAKE.COM WEBHOOK URL — sostituisci con il tuo
+const WORKER_URL = '/api/ticket';
+
+const CAR_BRANDS = [
+  { id:"abarth",         name:"Abarth",            flag:"🇮🇹", origin:"italiana",   models:["500e Scorpionissima","600e"] },
+  { id:"aiways",         name:"Aiways",             flag:"🇨🇳", origin:"cinese",     models:["U5","U6"] },
+  { id:"alfa-romeo",     name:"Alfa Romeo",         flag:"🇮🇹", origin:"italiana",   models:["Junior","Giulia","Stelvio","Tonale","33 Stradale"] },
+  { id:"alpine",         name:"Alpine",             flag:"🇫🇷", origin:"europea",    models:["A110","A290"] },
+  { id:"aston-martin",   name:"Aston Martin",       flag:"🇬🇧", origin:"europea",    models:["Vantage","DB12","DBS","DBX","DBX707"] },
+  { id:"audi",           name:"Audi",               flag:"🇩🇪", origin:"europea",    models:["A3","A4","A5","A6","A7","A8","Q2","Q3","Q5","Q5 Sportback","Q7","Q8","Q4 e-tron","Q6 e-tron","e-tron GT","RS3","RS6"] },
+  { id:"bentley",        name:"Bentley",            flag:"🇬🇧", origin:"europea",    models:["Continental GT","Continental GTC","Flying Spur","Bentayga","Bacalar"] },
+  { id:"bmw",            name:"BMW",                flag:"🇩🇪", origin:"europea",    models:["Serie 1","Serie 2","Serie 3","Serie 4","Serie 5","Serie 7","X1","X2","X3","X4","X5","X6","X7","i4","i5","i7","iX","iX1","M3","M5","M8"] },
+  { id:"byd",            name:"BYD",                flag:"🇨🇳", origin:"cinese",     models:["Dolphin","Seagull","Atto 2","Atto 3","Atto 5","Seal","Seal U","Seal U DM-i","Seal 06","Seal 6","Seal 6 Touring","Han","Tang"] },
+  { id:"cadillac",       name:"Cadillac",           flag:"🇺🇸", origin:"americana",  models:["Escalade","CT4","CT5","Lyriq"] },
+  { id:"chevrolet",      name:"Chevrolet",          flag:"🇺🇸", origin:"americana",  models:["Trax","Equinox","Blazer EV","Corvette"] },
+  { id:"citroen",        name:"Citroën",            flag:"🇫🇷", origin:"europea",    models:["C3","ë-C3","C3 Aircross","ë-C3 Aircross","C5 Aircross","Berlingo","SpaceTourer"] },
+  { id:"cupra",          name:"Cupra",              flag:"🇪🇸", origin:"europea",    models:["Born","Formentor","Leon","Ateca","Terramar","Tavascan"] },
+  { id:"dacia",          name:"Dacia",              flag:"🇷🇴", origin:"europea",    models:["Sandero","Sandero Stepway","Duster","Jogger","Spring","Bigster","C-Neo","Hipster"] },
+  { id:"deepal",         name:"Deepal (Changan)",   flag:"🇨🇳", origin:"cinese",     models:["S05","S07"] },
+  { id:"dodge",          name:"Dodge",              flag:"🇺🇸", origin:"americana",  models:["Durango","Challenger","Charger"] },
+  { id:"dongfeng",       name:"Dongfeng",           flag:"🇨🇳", origin:"cinese",     models:["Box","Nammi 01","EC07"] },
+  { id:"dr-automobiles", name:"DR Automobiles",     flag:"🇮🇹", origin:"italiana",   models:["DR 4.0","DR 5.0","DR 6.0"] },
+  { id:"ds-automobiles", name:"DS Automobiles",     flag:"🇫🇷", origin:"europea",    models:["DS 3","DS 3 E-Tense","DS 4","DS 4 E-Tense","DS 7","DS 7 E-Tense","DS N°3","DS N°4","DS N°7"] },
+  { id:"evo",            name:"EVO",               flag:"🇮🇹", origin:"italiana",   models:["EVO 3","EVO 5","EVO 6","EVO 7"] },
+  { id:"ferrari",        name:"Ferrari",            flag:"🇮🇹", origin:"italiana",   models:["296 GTB","296 GTS","SF90 Stradale","Roma","Portofino M","Purosangue","12Cilindri","F80"] },
+  { id:"fiat",           name:"Fiat",               flag:"🇮🇹", origin:"italiana",   models:["Panda","Grande Panda","500","500e","Tipo","600","600e"] },
+  { id:"firefly",        name:"Firefly (NIO)",      flag:"🇨🇳", origin:"cinese",     models:["Firefly EV"] },
+  { id:"ford",           name:"Ford",               flag:"🇺🇸", origin:"americana",  models:["Puma","Kuga","Explorer","Mustang","Mustang Mach-E","Bronco","Explorer EV","Transit"] },
+  { id:"forthing",       name:"Forthing",           flag:"🇨🇳", origin:"cinese",     models:["Friday","U-Tour"] },
+  { id:"gac-aion",       name:"GAC Aion",           flag:"🇨🇳", origin:"cinese",     models:["Aion Y Plus","Aion V","Aion LX Plus"] },
+  { id:"genesis",        name:"Genesis",            flag:"🇰🇷", origin:"coreana",    models:["G80","Electrified G80","GV70","GV80","GV60"] },
+  { id:"honda",          name:"Honda",              flag:"🇯🇵", origin:"giapponese", models:["Jazz","Civic","Accord","HR-V","ZR-V","CR-V","e:Ny1","e:N1"] },
+  { id:"hyundai",        name:"Hyundai",            flag:"🇰🇷", origin:"coreana",    models:["i10","i20","i30","i30 Wagon","Kona","Kona Electric","Tucson","Santa Fe","Ioniq 5","Ioniq 6","Ioniq 9","Nexo"] },
+  { id:"ickx",           name:"ICKX",              flag:"🇮🇹", origin:"italiana",   models:["E5","E6"] },
+  { id:"ineos",          name:"Ineos",              flag:"🇬🇧", origin:"europea",    models:["Grenadier","Grenadier Quartermaster"] },
+  { id:"isuzu",          name:"Isuzu",              flag:"🇯🇵", origin:"giapponese", models:["D-Max","D-Max N60","MU-X"] },
+  { id:"jaecoo",         name:"Jaecoo (Chery)",     flag:"🇨🇳", origin:"cinese",     models:["Jaecoo 5","Jaecoo 7","Jaecoo 8"] },
+  { id:"jaguar",         name:"Jaguar",             flag:"🇬🇧", origin:"europea",    models:["F-Pace","E-Pace","I-Pace","F-Type","XE","XF"] },
+  { id:"jeep",           name:"Jeep",               flag:"🇺🇸", origin:"americana",  models:["Avenger","Renegade","Compass","Cherokee","Wrangler","Grand Cherokee","Gladiator"] },
+  { id:"kia",            name:"Kia",                flag:"🇰🇷", origin:"coreana",    models:["Picanto","Rio","Ceed","Ceed Sportswagon","Stonic","Niro","Niro EV","Sportage","Sorento","EV3","EV4","EV6","EV9"] },
+  { id:"lamborghini",    name:"Lamborghini",        flag:"🇮🇹", origin:"italiana",   models:["Huracán","Urus","Revuelto","Lanzador"] },
+  { id:"lancia",         name:"Lancia",             flag:"🇮🇹", origin:"italiana",   models:["Ypsilon","Delta","Gamma"] },
+  { id:"land-rover",     name:"Land Rover",         flag:"🇬🇧", origin:"europea",    models:["Defender 90","Defender 110","Discovery","Discovery Sport","Range Rover","Range Rover Sport","Range Rover Velar","Range Rover Evoque"] },
+  { id:"leapmotor",      name:"Leapmotor",          flag:"🇨🇳", origin:"cinese",     models:["T03","C10","B10"] },
+  { id:"lexus",          name:"Lexus",              flag:"🇯🇵", origin:"giapponese", models:["UX","UX 300e","NX","NX 350h","RX","LX","GX","ES","LS","RC","LC","RZ"] },
+  { id:"lotus",          name:"Lotus",              flag:"🇬🇧", origin:"europea",    models:["Emira","Eletre","Emeya"] },
+  { id:"lynk-co",        name:"Lynk & Co",          flag:"🇸🇪", origin:"europea",    models:["01","02","05"] },
+  { id:"maserati",       name:"Maserati",           flag:"🇮🇹", origin:"italiana",   models:["Ghibli","Levante","Quattroporte","GranTurismo","GranCabrio","Grecale","MC20"] },
+  { id:"maxus",          name:"Maxus",              flag:"🇨🇳", origin:"cinese",     models:["T90 EV","eDeliver 3","eDeliver 9","MIFA 9","Mifa 7"] },
+  { id:"mazda",          name:"Mazda",              flag:"🇯🇵", origin:"giapponese", models:["2","3","3 Fastback","CX-3","CX-30","CX-5","CX-60","CX-80","MX-5","MX-30","6e"] },
+  { id:"mclaren",        name:"McLaren",            flag:"🇬🇧", origin:"europea",    models:["Artura","720S","765LT","GT","Elva"] },
+  { id:"mercedes-benz",  name:"Mercedes-Benz",      flag:"🇩🇪", origin:"europea",    models:["Classe A","Classe B","Classe C","Classe E","Classe S","GLA","GLB","GLC","GLE","GLS","CLA","CLS","EQA","EQB","EQC","EQE","EQS","AMG GT","G-Klasse"] },
+  { id:"mg",             name:"MG",                 flag:"🇨🇳", origin:"cinese",     models:["MG3","MG4 Electric","MG5","MG ZS","MG ZS EV","MG HS","MG EHS","Marvel R","Cyberster","ES5"] },
+  { id:"mini",           name:"MINI",               flag:"🇬🇧", origin:"europea",    models:["Cooper","Cooper Convertible","Clubman","Countryman","Aceman","Cooper E","Countryman E"] },
+  { id:"mitsubishi",     name:"Mitsubishi",         flag:"🇯🇵", origin:"giapponese", models:["ASX","Eclipse Cross","Outlander","Outlander PHEV"] },
+  { id:"nio",            name:"NIO",                flag:"🇨🇳", origin:"cinese",     models:["ET5","ET5 Touring","ET7","EL6","EL7","EL8"] },
+  { id:"nissan",         name:"Nissan",             flag:"🇯🇵", origin:"giapponese", models:["Juke","Qashqai","X-Trail","Leaf","Ariya","Micra","GT-R","Navara"] },
+  { id:"omoda",          name:"Omoda (Chery)",      flag:"🇨🇳", origin:"cinese",     models:["Omoda 3","Omoda 5","Omoda 7","Omoda 8","Omoda 9"] },
+  { id:"opel",           name:"Opel",               flag:"🇩🇪", origin:"europea",    models:["Corsa","Corsa Electric","Astra","Astra Sports Tourer","Mokka","Mokka-e","Grandland","Frontera","Zafira"] },
+  { id:"ora",            name:"ORA (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Funky Cat","ORA 03"] },
+  { id:"peugeot",        name:"Peugeot",            flag:"🇫🇷", origin:"europea",    models:["208","308","408","508","2008","3008","5008","E-208","E-308","E-2008","E-408","E-3008","E-5008"] },
+  { id:"polestar",       name:"Polestar",           flag:"🇸🇪", origin:"europea",    models:["Polestar 2","Polestar 3","Polestar 4","Polestar 5"] },
+  { id:"porsche",        name:"Porsche",            flag:"🇩🇪", origin:"europea",    models:["911","718 Cayman","718 Boxster","Macan","Macan EV","Cayenne","Panamera","Taycan","Taycan Cross Turismo"] },
+  { id:"renault",        name:"Renault",            flag:"🇫🇷", origin:"europea",    models:["Clio","Megane","Austral","Espace","Arkana","Zoe","Megane E-Tech","R5 E-Tech","R4 E-Tech","Scenic E-Tech"] },
+  { id:"rolls-royce",    name:"Rolls-Royce",        flag:"🇬🇧", origin:"europea",    models:["Phantom","Ghost","Wraith","Dawn","Cullinan","Spectre"] },
+  { id:"seat",           name:"Seat",               flag:"🇪🇸", origin:"europea",    models:["Ibiza","Leon","Leon Sportstourer","Arona","Ateca","Tarraco"] },
+  { id:"seres",          name:"Seres",              flag:"🇨🇳", origin:"cinese",     models:["SF5","M7","M9"] },
+  { id:"sportequipe",    name:"Sportequipe",       flag:"🇮🇹", origin:"italiana",   models:["Sportequipe 5","Sportequipe 6"] },
+  { id:"skoda",          name:"Škoda",              flag:"🇨🇿", origin:"europea",    models:["Fabia","Octavia","Octavia Combi","Superb","Scala","Kamiq","Karoq","Kodiaq","Elroq","Enyaq","Epiq"] },
+  { id:"skywell",        name:"Skywell",            flag:"🇨🇳", origin:"cinese",     models:["BT-H6"] },
+  { id:"smart",          name:"Smart",              flag:"🇩🇪", origin:"europea",    models:["#1","#3","#5"] },
+  { id:"subaru",         name:"Subaru",             flag:"🇯🇵", origin:"giapponese", models:["Impreza","Outback","Forester","XV","BRZ","Solterra","Uncharted"] },
+  { id:"suzuki",         name:"Suzuki",             flag:"🇯🇵", origin:"giapponese", models:["Swift","Swift Sport","Vitara","S-Cross","Ignis","Jimny","eVitara"] },
+  { id:"swm",            name:"SWM",                flag:"🇨🇳", origin:"cinese",     models:["G01","G05","G09"] },
+  { id:"tesla",          name:"Tesla",              flag:"🇺🇸", origin:"americana",  models:["Model 3","Model Y","Model X","Model S","Cybertruck","Cybercab"] },
+  { id:"toyota",         name:"Toyota",             flag:"🇯🇵", origin:"giapponese", models:["Yaris","Yaris Cross","Corolla","Corolla Cross","Camry","C-HR","RAV4","Highlander","Land Cruiser","GR86","GR Yaris","bZ4X","Proace City"] },
+  { id:"volkswagen",     name:"Volkswagen",         flag:"🇩🇪", origin:"europea",    models:["Polo","Golf","Golf Variant","Passat","Arteon","T-Cross","T-Roc","Tiguan","Touareg","ID.3","ID.4","ID.5","ID.7","ID.Polo","ID.Cross"] },
+  { id:"volvo",          name:"Volvo",              flag:"🇸🇪", origin:"europea",    models:["XC40","XC60","XC90","V60","V60 Cross Country","V90","S60","S90","EX30","EX40","EX60","EX90","ES90"] },
+  { id:"wey",            name:"Wey (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Coffee 01 PHEV","Coffee 02"] },
+  { id:"xpeng",          name:"Xpeng",              flag:"🇨🇳", origin:"cinese",     models:["G6","G9"] },
+  { id:"zeekr",          name:"Zeekr (Geely)",      flag:"🇨🇳", origin:"cinese",     models:["001","007","009","X","EX5","Starray"] },
+];
+
+window.NLT=(function(){
+  'use strict';
+  function initMarca(){
+    var s=document.getElementById('nmarca');
+    var o=document.createElement('option');o.value='';o.textContent='-- Seleziona marca --';s.appendChild(o);
+    for(var i=0;i<CAR_BRANDS.length;i++){var op=document.createElement('option');op.value=CAR_BRANDS[i].name;op.textContent=CAR_BRANDS[i].name;s.appendChild(op);}
+    s.addEventListener('change',function(){clr('ff-marca');prog();});
+  }
+  function tipo(v){
+    document.getElementById('ntipo').value=v;
+    document.getElementById('paz').classList.toggle('on',v==='Azienda');
+    document.getElementById('ppr').classList.toggle('on',v==='Privato');
+    var ln=document.getElementById('lnome'),lp=document.getElementById('lpiva');
+    var in_=document.getElementById('nnome'),ip=document.getElementById('npiva');
+    if(v==='Privato'){ln.innerHTML='Nome e Cognome <span class="req">*</span>';lp.innerHTML='Codice Fiscale <span class="req">*</span>';in_.placeholder='Nome e Cognome';ip.placeholder='RSSMRA80A01H501U';ip.maxLength=16;}
+    else{ln.innerHTML='Nome Azienda <span class="req">*</span>';lp.innerHTML='Partita IVA <span class="req">*</span>';in_.placeholder='Ragione sociale';ip.placeholder='IT12345678901';ip.maxLength=13;}
+    prog();
+  }
+  function durata(v,btn){
+    document.getElementById('ndurata').value=v;
+    btn.closest('.pills').querySelectorAll('.pill').forEach(function(p){p.classList.remove('on');});
+    btn.classList.add('on');
+  }
+  function km(v){
+    var n=parseInt(v);
+    document.getElementById('nkmv').textContent=n.toLocaleString('it-IT');
+    document.getElementById('nkm').value=v;
+    document.getElementById('nkms').style.setProperty('--pct',((n-10000)/190000*100).toFixed(1)+'%');
+  }
+  function fr(v){
+    document.getElementById('nfr').value=v;
+    document.getElementById('frno').classList.toggle('on',v==='No');
+    document.getElementById('frsi').classList.toggle('on',v==='Si');
+  }
+  var RQ=['nnome','npiva','nref','ntel','nemail','nmarca','nmodello'];
+  function prog(){
+    var f=3,t=RQ.length+3;
+    RQ.forEach(function(id){var el=document.getElementById(id);if(el&&el.value.trim())f++;});
+    var p=Math.round(f/t*100);
+    document.getElementById('nf').style.width=p+'%';
+    document.getElementById('np').textContent=p+'%';
+  }
+  function clr(id){var el=document.getElementById(id);if(el)el.classList.remove('bad');}
+  function validate(){
+    var ok=true;
+    function e(id,show){var el=document.getElementById(id);if(el)el.classList.toggle('bad',show);if(show)ok=false;}
+    e('ff-nome',!document.getElementById('nnome').value.trim());
+    e('ff-piva',!document.getElementById('npiva').value.trim());
+    e('ff-ref',!document.getElementById('nref').value.trim());
+    e('ff-tel',!/^[\\+\\d\\s\\-\\(\\)]{7,}$/.test(document.getElementById('ntel').value.trim()));
+    e('ff-email',!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(document.getElementById('nemail').value.trim()));
+    e('ff-marca',!document.getElementById('nmarca').value);
+    e('ff-modello',!document.getElementById('nmodello').value.trim());
+    return ok;
+  }
+  function desc(d){
+    var r='Richiesta Noleggio a Lungo Termine\\n\\n';
+    r+='Tipo: '+d.tipo+'\\n';
+    r+=(d.tipo==='Privato'?'Nome e Cognome: ':'Nome Azienda: ')+d.nome+'\\n';
+    r+=(d.tipo==='Privato'?'Codice Fiscale: ':'Partita IVA: ')+d.piva+'\\n';
+    r+='Referente: '+d.ref+'\\n';
+    r+='Telefono: '+d.tel+'\\n';
+    r+='Email: '+d.email+'\\n';
+    r+='Marca: '+d.marca+'\\n';
+    r+='Modello: '+d.modello+'\\n';
+    r+='Durata: '+d.durata+' mesi\\n';
+    r+='Km Totali: '+parseInt(d.km).toLocaleString('it-IT')+' km\\n';
+    r+='Franchigia: '+d.fr+'\\n';
+    if(d.note) r+='Note: '+d.note+'\\n';
+    return r;
+  }
+  function toast(msg,t){var el=document.getElementById('nlt-toast');el.textContent=msg;el.className='show '+(t||'ok');setTimeout(function(){el.className='';},5000);}
+  function submit(ev){
+    ev.preventDefault();
+    if(!validate()){var f=document.querySelector('#nlt-root .bad input,#nlt-root .bad select');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});return;}
+    var btn=document.getElementById('nbtn');
+    btn.classList.add('loading');btn.disabled=true;
+    var d={
+      tipo:document.getElementById('ntipo').value,
+      nome:document.getElementById('nnome').value.trim(),
+      piva:document.getElementById('npiva').value.trim(),
+      ref:document.getElementById('nref').value.trim(),
+      tel:document.getElementById('ntel').value.trim(),
+      email:document.getElementById('nemail').value.trim(),
+      marca:document.getElementById('nmarca').value,
+      modello:document.getElementById('nmodello').value.trim(),
+      durata:document.getElementById('ndurata').value,
+      km:document.getElementById('nkm').value,
+      fr:document.getElementById('nfr').value,
+      note:document.getElementById('nnote').value.trim()
+    };
+    var payload={
+      tipo:    d.tipo,
+      nome:    d.nome,
+      piva:    d.piva,
+      ref:     d.ref,
+      tel:     d.tel,
+      email:   d.email,
+      marca:   d.marca,
+      modello: d.modello,
+      durata:  d.durata,
+      km:      parseInt(d.km).toLocaleString('it-IT'),
+      fr:      d.fr,
+      note:    d.note || ''
+    };
+    fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){
+      if(!r.ok && r.status===0){throw new Error('Nessuna risposta dal server (CORS o rete)');}
+      return r.json().then(function(data){return{status:r.status,ok:r.ok,data:data};});
+    })
+    .then(function(res){
+      btn.classList.remove('loading');btn.disabled=false;
+      if(res.ok && res.data && res.data.ok){
+        document.getElementById('nf').style.width='100%';
+        document.getElementById('np').textContent='100%';
+        var tid=res.data.ticket_id?'<br><small style="opacity:.6">Ticket #'+res.data.ticket_id+'</small>':'';
+        document.getElementById('nb').innerHTML=
+          '<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:64px 32px;text-align:center">'+
+          '<div style="width:60px;height:60px;border-radius:50%;background:rgba(39,174,96,.1);display:flex;align-items:center;justify-content:center">'+
+          '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+          '<div style="font-family:Cormorant Garamond,serif;font-size:34px;font-weight:300;color:#0d1e90">Richiesta Inviata</div>'+
+          '<div style="font-size:14px;color:#3a4e8c;max-width:360px;line-height:1.7">Il team DoubleDsolution contatterà <strong>'+d.ref+'</strong> entro 24 ore lavorative.'+tid+'</div>'+
+          '</div>';
+      } else {
+        var msg=(res.data&&res.data.error)?res.data.error:('Errore server '+res.status);
+        toast('❌ '+msg,'err');
+      }
+    })
+    .catch(function(err){
+      btn.classList.remove('loading');btn.disabled=false;
+      toast('❌ '+(err.message||'Errore di rete — riprova'),'err');
+    });
+  }
+  function init(){
+    initMarca();km(40000);
+    document.getElementById('nlt-form').addEventListener('submit',submit);
+    RQ.forEach(function(id){
+      var el=document.getElementById(id);if(!el)return;
+      el.addEventListener('input',prog);el.addEventListener('change',prog);
+      el.addEventListener('input',function(){clr('ff-'+id.replace(/^n/,''));});
+    });
+  }
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
+  return{tipo:tipo,durata:durata,km:km,fr:fr};
+})();
+</script>
+</body>
+</html>
+`;
 
 export default {
   async fetch(request, env) {
-
-    /* ── Preflight CORS ────────────────────────── */
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: CORS });
-    }
-
-    /* ── Solo POST /api/ticket ─────────────────── */
     const url = new URL(request.url);
-    if (url.pathname !== '/api/ticket' || request.method !== 'POST') {
-      return new Response(JSON.stringify({ error: 'Not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json', ...CORS },
+
+    // Serve HTML form
+    if (request.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html')) {
+      return new Response(HTML, {
+        headers: { 'Content-Type': 'text/html; charset=utf-8' }
       });
     }
 
-    /* ── Leggi payload ─────────────────────────── */
-    let body;
-    try { body = await request.json(); }
-    catch { return fail('Payload JSON non valido', 400); }
-
-    const nome  = body.nome  || '';
-    const email = body.email || '';
-    const marca = body.marca || '';
-    const modello = body.modello || '';
-
-    if (!nome || !email || !marca || !modello) {
-      return fail('Campi obbligatori mancanti: nome, email, marca, modello', 422);
+    // API ticket
+    if (url.pathname === '/api/ticket' && request.method === 'POST') {
+      return handleTicket(request, env);
     }
 
-    /* ── FD_API_KEY ────────────────────────────── */
-    const apiKey = env.FD_API_KEY;
-    if (!apiKey) return fail('FD_API_KEY non configurata in Cloudflare → Variabili e segreti', 500);
+    return new Response('Not found', { status: 404 });
+  },
+};
 
-    /* ── Costruisci descrizione HTML ───────────── */
-    const rr = (l, v) => v
-      ? `<tr><td style="padding:3px 14px 3px 0;color:#555;font-size:13px"><b>${l}</b></td><td style="font-size:13px">${v}</td></tr>`
-      : '';
+async function handleTicket(request, env) {
+  let body;
+  try { body = await request.json(); }
+  catch { return fail('Payload non valido', 400); }
 
-    const desc = `
-<h3 style="color:#0d1e90;margin:0 0 12px">Richiesta NLT</h3>
+  const nome    = body.nome    || '';
+  const email   = body.email   || '';
+  const marca   = body.marca   || '';
+  const modello = body.modello || '';
+  const ref     = body.ref || body.referente || nome;
+  const fr      = body.fr  || body.franchigia || '';
+
+  if (!nome || !email || !marca || !modello) return fail('Campi obbligatori mancanti', 422);
+
+  const apiKey = env.FD_API_KEY;
+  if (!apiKey) return fail('FD_API_KEY non configurata', 500);
+
+  const rr = (l, v) => v
+    ? `<tr><td style="padding:3px 12px 3px 0;color:#555;font-size:13px"><b>${l}</b></td><td style="font-size:13px">${v}</td></tr>`
+    : '';
+
+  const desc = `<h3 style="color:#0d1e90;margin:0 0 12px">Richiesta NLT</h3>
 <table cellpadding="0" cellspacing="0">
   ${rr('Tipo',         body.tipo)}
   ${rr('Azienda/Nome', nome)}
   ${rr('P.IVA/C.F.',   body.piva)}
-  ${rr('Referente',    body.ref || body.referente)}
+  ${rr('Referente',    ref)}
   ${rr('Telefono',     body.tel)}
   ${rr('Email',        email)}
   <tr><td colspan="2"><hr style="border:none;border-top:1px solid #ddd;margin:8px 0"></td></tr>
   ${rr('Marca',        marca)}
   ${rr('Modello',      modello)}
-  ${rr('Durata',       body.durata ? body.durata+' mesi' : '')}
-  ${rr('Km',           body.km ? body.km+' km' : '')}
-  ${rr('Franchigia',   body.fr || body.franchigia)}
+  ${rr('Durata',       body.durata ? body.durata + ' mesi' : '')}
+  ${rr('Km',           body.km ? body.km + ' km' : '')}
+  ${rr('Franchigia',   fr)}
   ${rr('Note',         body.note)}
 </table>`;
 
-    /* ── Chiamata Freshdesk ─────────────────────── */
-    let res;
-    try {
-      res = await fetch(FD_ENDPOINT, {
-        method : 'POST',
-        headers: {
-          'Content-Type' : 'application/json',
-          'Authorization': 'Basic ' + btoa(apiKey + ':X'),
-        },
-        body: JSON.stringify({
-          subject    : `NLT — ${marca} ${modello} | ${body.durata||'?'} mesi`,
-          description: desc,
-          email,
-          name       : body.ref || body.referente || nome,
-          phone      : body.tel || '',
-          priority   : 2,
-          status     : 2,
-          tags       : ['nlt','noleggio-lungo-termine'],
-        }),
-      });
-    } catch (e) {
-      return fail('Errore rete verso Freshdesk: ' + e.message, 502);
-    }
+  let res;
+  try {
+    res = await fetch(FD_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type' : 'application/json',
+        'Authorization': 'Basic ' + btoa(apiKey + ':X'),
+      },
+      body: JSON.stringify({
+        subject    : `NLT — ${marca} ${modello} | ${body.durata || '?'} mesi`,
+        description: desc,
+        email,
+        name       : ref,
+        phone      : body.tel || '',
+        priority   : 2,
+        status     : 2,
+        tags       : ['nlt', 'noleggio-lungo-termine'],
+      }),
+    });
+  } catch (e) {
+    return fail('Errore rete: ' + e.message, 502);
+  }
 
-    const fd = await res.json().catch(() => ({}));
+  const fd = await res.json().catch(() => ({}));
+  if (res.status === 201) {
+    return new Response(JSON.stringify({ ok: true, ticket_id: fd.id }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
-    if (res.status === 201) {
-      return ok({ ok: true, ticket_id: fd.id });
-    }
+  const errMsg = fd?.errors?.[0]?.message || fd?.description || JSON.stringify(fd);
+  return fail('Freshdesk: ' + errMsg, res.status);
+}
 
-    const errMsg = fd?.errors?.[0]?.message || fd?.description || JSON.stringify(fd);
-    return fail('Freshdesk: ' + errMsg, res.status);
-  },
-};
-
-function ok(data)         { return new Response(JSON.stringify(data), { status: 201, headers: { 'Content-Type':'application/json', ...CORS } }); }
-function fail(msg, status){ return new Response(JSON.stringify({ ok:false, error:msg }), { status, headers: { 'Content-Type':'application/json', ...CORS } }); }
+function fail(msg, status) {
+  return new Response(JSON.stringify({ ok: false, error: msg }), {
+    status,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
