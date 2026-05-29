@@ -169,7 +169,7 @@
 <div id="nlt-toast"></div>
 <script>
 // MAKE.COM WEBHOOK URL — sostituisci con il tuo
-var MAKE_URL = 'https://hook.eu1.make.com/ngl291j6gdqet6tx6q8aop8phn85cmgn';
+const WORKER_URL = '/api/ticket';
 
 const CAR_BRANDS = [
   { id:"abarth",         name:"Abarth",            flag:"🇮🇹", origin:"italiana",   models:["500e Scorpionissima","600e"] },
@@ -356,7 +356,7 @@ window.NLT=(function(){
       fr:      d.fr,
       note:    d.note || ''
     };
-    fetch(MAKE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
     .then(function(r){
       document.getElementById('nf').style.width='100%';
       document.getElementById('np').textContent='100%';
