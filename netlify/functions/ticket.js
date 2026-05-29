@@ -16,23 +16,31 @@ exports.handler = async (event) => {
   }
 
   let body;
-  try { body = JSON.parse(event.body); }
-  catch { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Payload non valido' }) }; }
+  try {
+    body = JSON.parse(event.body || '{}');
+  } catch(e) {
+    return { statusCode: 400, headers, body: JSON.stringify({ error: 'JSON non valido: ' + e.message }) };
+  }
 
-  const nome    = body.nome    || '';
+  // Log per debug
+  console.log('BODY RICEVUTO:', JSON.stringify(body));
+
+  // Campi con fallback
+  const nome    = body.nome    || body.name  || 'N/D';
   const email   = body.email   || '';
-  const marca   = body.marca   || '';
-  const modello = body.modello || '';
+  const marca   = body.marca   || 'N/D';
+  const modello = body.modello || 'N/D';
   const ref     = body.ref || body.referente || nome;
   const fr      = body.fr  || body.franchigia || '';
 
-  if (!nome || !email || !marca || !modello) {
-    return { statusCode: 422, headers, body: JSON.stringify({ error: 'Campi obbligatori mancanti' }) };
+  // Solo email è strettamente obbligatoria per Freshdesk
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { statusCode: 422, headers, body: JSON.stringify({ error: 'Email obbligatoria e valida. Ricevuto: ' + JSON.stringify(body) }) };
   }
 
   const apiKey = process.env.FD_API_KEY;
   if (!apiKey) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: 'FD_API_KEY non configurata su Netlify' }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'FD_API_KEY non configurata' }) };
   }
 
   const rr = (l, v) => v
@@ -91,20 +99,14 @@ exports.handler = async (event) => {
     req.end();
   });
 
+  console.log('FRESHDESK STATUS:', result.status, 'BODY:', result.body);
+
   const fd = JSON.parse(result.body || '{}');
 
   if (result.status === 201) {
-    return {
-      statusCode: 201,
-      headers,
-      body: JSON.stringify({ ok: true, ticket_id: fd.id }),
-    };
+    return { statusCode: 201, headers, body: JSON.stringify({ ok: true, ticket_id: fd.id }) };
   }
 
   const errMsg = fd?.errors?.[0]?.message || fd?.description || result.body;
-  return {
-    statusCode: result.status,
-    headers,
-    body: JSON.stringify({ ok: false, error: 'Freshdesk: ' + errMsg }),
-  };
+  return { statusCode: result.status, headers, body: JSON.stringify({ ok: false, error: 'Freshdesk: ' + errMsg }) };
 };
