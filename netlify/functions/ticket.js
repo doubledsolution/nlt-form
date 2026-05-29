@@ -2,45 +2,109 @@ const https = require('https');
 
 exports.handler = async (event) => {
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin' : '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Content-Type': 'application/json'
   };
 
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
+    return { statusCode: 204, headers, body: '' };
+  }
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
-  try {
-    const payload = event.body;
-    const apiKey = process.env.FD_API_KEY;
-    const auth = Buffer.from(apiKey + ':X').toString('base64');
+  let body;
+  try { body = JSON.parse(event.body); }
+  catch { return { statusCode: 400, headers, body: JSON.stringify({ error: 'Payload non valido' }) }; }
 
-    const result = await new Promise((resolve, reject) => {
-      const options = {
-        hostname: 'doubledsolution.freshdesk.com',
-        path: '/api/v2/tickets',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + auth,
-          'Content-Length': Buffer.byteLength(payload)
-        }
-      };
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', chunk => data += chunk);
-        res.on('end', () => resolve({ status: res.statusCode, body: data }));
-      });
-      req.on('error', reject);
-      req.write(payload);
-      req.end();
+  const nome    = body.nome    || '';
+  const email   = body.email   || '';
+  const marca   = body.marca   || '';
+  const modello = body.modello || '';
+  const ref     = body.ref || body.referente || nome;
+  const fr      = body.fr  || body.franchigia || '';
+
+  if (!nome || !email || !marca || !modello) {
+    return { statusCode: 422, headers, body: JSON.stringify({ error: 'Campi obbligatori mancanti' }) };
+  }
+
+  const apiKey = process.env.FD_API_KEY;
+  if (!apiKey) {
+    return { statusCode: 500, headers, body: JSON.stringify({ error: 'FD_API_KEY non configurata su Netlify' }) };
+  }
+
+  const rr = (l, v) => v
+    ? `<tr><td style="padding:3px 12px 3px 0;color:#555;font-size:13px"><b>${l}</b></td><td style="font-size:13px">${v}</td></tr>`
+    : '';
+
+  const description = `
+<h3 style="color:#0d1e90;margin:0 0 12px">Richiesta Noleggio a Lungo Termine</h3>
+<table cellpadding="0" cellspacing="0">
+  ${rr('Tipo',         body.tipo)}
+  ${rr('Azienda/Nome', nome)}
+  ${rr('P.IVA/C.F.',   body.piva)}
+  ${rr('Referente',    ref)}
+  ${rr('Telefono',     body.tel)}
+  ${rr('Email',        email)}
+  <tr><td colspan="2"><hr style="border:none;border-top:1px solid #ddd;margin:8px 0"></td></tr>
+  ${rr('Marca',        marca)}
+  ${rr('Modello',      modello)}
+  ${rr('Durata',       body.durata ? body.durata + ' mesi' : '')}
+  ${rr('Km',           body.km ? body.km + ' km' : '')}
+  ${rr('Franchigia',   fr)}
+  ${rr('Note',         body.note)}
+</table>`;
+
+  const fdPayload = JSON.stringify({
+    subject    : `NLT — ${marca} ${modello} | ${body.durata || '?'} mesi`,
+    description,
+    email,
+    name       : ref,
+    phone      : body.tel || '',
+    priority   : 2,
+    status     : 2,
+    tags       : ['nlt', 'noleggio-lungo-termine'],
+  });
+
+  const auth = Buffer.from(apiKey + ':X').toString('base64');
+
+  const result = await new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'doubledsolution.freshdesk.com',
+      path    : '/api/v2/tickets',
+      method  : 'POST',
+      headers : {
+        'Content-Type'  : 'application/json',
+        'Authorization' : 'Basic ' + auth,
+        'Content-Length': Buffer.byteLength(fdPayload),
+      },
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body: data }));
     });
+    req.on('error', reject);
+    req.write(fdPayload);
+    req.end();
+  });
 
-    return { statusCode: result.status, headers, body: result.body };
+  const fd = JSON.parse(result.body || '{}');
 
-  } catch (err) {
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+  if (result.status === 201) {
+    return {
+      statusCode: 201,
+      headers,
+      body: JSON.stringify({ ok: true, ticket_id: fd.id }),
+    };
   }
+
+  const errMsg = fd?.errors?.[0]?.message || fd?.description || result.body;
+  return {
+    statusCode: result.status,
+    headers,
+    body: JSON.stringify({ ok: false, error: 'Freshdesk: ' + errMsg }),
+  };
 };
