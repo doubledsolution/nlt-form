@@ -1021,15 +1021,13 @@ function submitForm() {
   .then(function(res) {
     btn.classList.remove('loading');
     btn.disabled = false;
+    console.log('[NLT] Risposta server:', JSON.stringify(res));
 
     if (res.status === 200 || res.status === 201 || res.data.ok || res.data.id) {
-      // Successo
       document.getElementById('formContainer').style.display = 'none';
       document.getElementById('successScreen').classList.add('visible');
-      // Aggiorna progress 100%
       document.getElementById('progressBar').style.width = '100%';
       document.getElementById('progressPct').textContent = '100%';
-      // Mostra numero ticket se disponibile
       var ticketId = res.data.id || (res.data.ticket && res.data.ticket.id);
       if (ticketId) {
         document.getElementById('ticketNum').textContent = 'Ticket #' + ticketId;
@@ -1037,7 +1035,9 @@ function submitForm() {
       }
       showToast('✅ Richiesta inviata con successo!', 'ok');
     } else {
-      var errMsg = res.data.error || res.data.description || 'Errore invio. Riprova tra qualche istante.';
+      var errDetail = res.data.errors ? JSON.stringify(res.data.errors) : '';
+      var errMsg = res.data.error || res.data.description || 'Errore invio';
+      console.error('[NLT] Errore Freshdesk:', errMsg, errDetail, res.data.raw || '');
       showToast('❌ ' + errMsg, 'err');
     }
   })
