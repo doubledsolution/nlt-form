@@ -91,7 +91,8 @@
   <div class="card">
     <div class="cbar"></div>
     <div class="cbody" id="nb">
-      <form id="nlt-form" novalidate>
+      <form id="nlt-form" name="nlt-richiesta" netlify data-netlify="true" novalidate>
+        <input type="hidden" name="form-name" value="nlt-richiesta">
         <div class="sec">
           <div class="sttl">01 — Intestatario</div>
           <div class="f" style="margin-bottom:20px">
@@ -356,27 +357,37 @@ window.NLT=(function(){
       fr:      d.fr,
       note:    d.note || ''
     };
-    fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    // Invia a Netlify Forms
+    var formData = new FormData();
+    formData.append('form-name', 'nlt-richiesta');
+    formData.append('tipo',    d.tipo);
+    formData.append('nome',    d.nome);
+    formData.append('piva',    d.piva);
+    formData.append('ref',     d.ref);
+    formData.append('tel',     d.tel);
+    formData.append('email',   d.email);
+    formData.append('marca',   d.marca);
+    formData.append('modello', d.modello);
+    formData.append('durata',  d.durata + ' mesi');
+    formData.append('km',      d.km + ' km');
+    formData.append('franchigia', d.fr);
+    formData.append('note',    d.note || '');
+
+    fetch('/', { method:'POST', body: formData })
     .then(function(r){
-      if(!r.ok && r.status===0){throw new Error('Nessuna risposta dal server (CORS o rete)');}
-      return r.json().then(function(data){return{status:r.status,ok:r.ok,data:data};});
-    })
-    .then(function(res){
       btn.classList.remove('loading');btn.disabled=false;
-      if(res.ok && res.data && res.data.ok){
+      if(r.ok){
         document.getElementById('nf').style.width='100%';
         document.getElementById('np').textContent='100%';
-        var tid=res.data.ticket_id?'<br><small style="opacity:.6">Ticket #'+res.data.ticket_id+'</small>':'';
         document.getElementById('nb').innerHTML=
           '<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:64px 32px;text-align:center">'+
           '<div style="width:60px;height:60px;border-radius:50%;background:rgba(39,174,96,.1);display:flex;align-items:center;justify-content:center">'+
           '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
           '<div style="font-family:Cormorant Garamond,serif;font-size:34px;font-weight:300;color:#0d1e90">Richiesta Inviata</div>'+
-          '<div style="font-size:14px;color:#3a4e8c;max-width:360px;line-height:1.7">Il team DoubleDsolution contatterà <strong>'+d.ref+'</strong> entro 24 ore lavorative.'+tid+'</div>'+
+          '<div style="font-size:14px;color:#3a4e8c;max-width:360px;line-height:1.7">Il team DoubleDsolution contatterà <strong>'+d.ref+'</strong> entro 24 ore lavorative.</div>'+
           '</div>';
       } else {
-        var msg=(res.data&&res.data.error)?res.data.error:('Errore server '+res.status);
-        toast('❌ '+msg,'err');
+        toast('❌ Errore '+r.status+' — riprova o contattaci','err');
       }
     })
     .catch(function(err){
