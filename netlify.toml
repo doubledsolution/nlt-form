@@ -1,7 +1,16 @@
-[functions]
-  directory = "netlify/functions"
+[build]
+  publish = "."
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors *"
+    Access-Control-Allow-Origin = "*"
+
