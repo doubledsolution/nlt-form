@@ -993,19 +993,19 @@ function submitForm() {
     subject:     'NLT — ' + marca + ' ' + modello + ' (' + durata + ' mesi) — ' + nome,
     description: buildDesc(d),
     email:       email,
-    name:        ref,
-    phone:       tel,
+    name:        ref || nome,
+    phone:       String(tel || ''),
     priority:    2,
     tags:        ['nlt', 'noleggio-lungo-termine'],
-    custom_fields: {
-      cf_tipo_intestatario: tipo,
-      cf_piva_cf:           pivaOcf,
-      cf_marca:             marca,
-      cf_modello:           modello,
-      cf_durata_mesi:       parseInt(durata),
-      cf_km_totali:         parseInt(km),
-      cf_franchigia:        franchigia === 'Sì'
-    }
+    tipo:        tipo,
+    piva_cf:     pivaOcf,
+    marca:       marca,
+    modello:     modello,
+    durata:      durata,
+    km:          km,
+    franchigia:  franchigia,
+    referente:   ref,
+    note:        document.getElementById('f_note').value.trim()
   };
 
   var btn = document.getElementById('btnSubmit');
