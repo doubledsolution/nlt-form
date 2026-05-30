@@ -1,0 +1,96 @@
+name: NLT Ticket Freshdesk
+
+on:
+  repository_dispatch:
+    types: [nlt_ticket]
+
+jobs:
+  create-ticket:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Crea ticket su Freshdesk
+        env:
+          FD_API_KEY: ${{ secrets.FD_API_KEY }}
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          python3 - << PYEOF2
+          import os, json, urllib.request, base64
+
+          p = json.loads(os.environ["PAYLOAD"])
+          email   = str(p.get("email","")).strip()
+          name    = str(p.get("name","Cliente")).strip()
+          phone   = str(p.get("phone","")).strip()
+          marca   = str(p.get("marca","N/D")).strip()
+          modello = str(p.get("modello","N/D")).strip()
+          durata  = str(p.get("durata","?")).strip()
+          km      = str(p.get("km","")).strip()
+          tipo    = str(p.get("tipo","")).strip()
+          piva    = str(p.get("piva_cf","")).strip()
+          fr      = str(p.get("franchigia","No")).strip()
+          note    = str(p.get("note","")).strip()
+          ref     = str(p.get("referente","")).strip() or name
+
+          km_num = "".join(c for c in km if c.isdigit())
+          km_fmt = "{:,}".format(int(km_num)).replace(",",".") + " km" if km_num else ""
+          km_ann = "{:,}".format(int(int(km_num)/int(durata)*12)).replace(",",".") + " km/anno" if km_num and durata.isdigit() else km_fmt
+          ha_fr  = fr in ("Si","yes","true","True")
+
+          def rr(l,v):
+            return "<tr><td style=\"padding:5px 14px 5px 0;color:#555;font-weight:600;font-size:13px\">" + l + "</td><td style=\"font-size:13px;color:#0a0f2e\">" + v + "</td></tr>" if v else ""
+
+          desc = ("<h2 style=\"color:#0d1e90;font-family:sans-serif\">Richiesta Noleggio Lungo Termine</h2>"
+            "<table style=\"border-collapse:collapse;font-family:sans-serif;width:100%;max-width:580px\">"
+            "<tr style=\"background:#f0f4ff\"><td colspan=\"2\" style=\"padding:7px 12px;font-weight:700;color:#0d1e90;font-size:11px;text-transform:uppercase\">Intestatario</td></tr>"
+            + rr("Tipo",tipo) + rr("Azienda / Nome",name) + rr("P.IVA / CF",piva)
+            + "<tr style=\"background:#f0f4ff\"><td colspan=\"2\" style=\"padding:7px 12px;font-weight:700;color:#0d1e90;font-size:11px;text-transform:uppercase\">Referente</td></tr>"
+            + rr("Nome",ref) + rr("Cellulare",phone) + rr("Email",email)
+            + "<tr style=\"background:#f0f4ff\"><td colspan=\"2\" style=\"padding:7px 12px;font-weight:700;color:#0d1e90;font-size:11px;text-transform:uppercase\">Veicolo</td></tr>"
+            + rr("Marca",marca) + rr("Modello",modello)
+            + "<tr style=\"background:#f0f4ff\"><td colspan=\"2\" style=\"padding:7px 12px;font-weight:700;color:#0d1e90;font-size:11px;text-transform:uppercase\">Contratto</td></tr>"
+            + rr("Durata", durata+" mesi" if durata else "") + rr("Km Totali",km_fmt) + rr("Km Annuali",km_ann) + rr("Franchigia",fr)
+            + rr("Note",note) + "</table>")
+
+          cf = {
+            "cf_persona_di_riferimento": ref,
+            "cf_cellulare":              phone,
+            "cf_mail":                   email,
+            "cf_p_iva_o_codice_fiscale": piva,
+            "cf_indirizzo":              tipo,
+            "cf_mesi_contratto":         durata,
+            "cf_km_annuali":             km_ann,
+            "cf_franchigia_furto":       ha_fr,
+            "cf_franchigia_danni":       ha_fr,
+            "cf_gomme":                  False,
+            "cf_auto_sostitutiva":       False,
+          }
+          cf = {k:v for k,v in cf.items() if v != "" and v is not None}
+
+          payload = {
+            "subject":       "NLT - " + marca + " " + modello + " (" + durata + " mesi) - " + name,
+            "description":   desc,
+            "email":         email,
+            "name":          ref or name,
+            "priority":      2,
+            "status":        2,
+            "tags":          ["nlt","noleggio-lungo-termine"],
+            "custom_fields": cf,
+          }
+          if phone: payload["phone"] = phone
+
+          api_key = os.environ["FD_API_KEY"]
+          auth    = base64.b64encode((api_key + ":X").encode()).decode()
+          data    = json.dumps(payload).encode()
+          req = urllib.request.Request(
+            "https://doubledsolution.freshdesk.com/api/v2/tickets",
+            data=data, method="POST",
+            headers={"Content-Type":"application/json","Authorization":"Basic "+auth}
+          )
+          try:
+            with urllib.request.urlopen(req) as r:
+              resp = json.loads(r.read())
+              print("Ticket #" + str(resp.get("id","?")))
+          except urllib.error.HTTPError as e:
+            err = e.read().decode()
+            print("Errore " + str(e.code) + ": " + err)
+            exit(1)
+          PYEOF2
