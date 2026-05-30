@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richiesta Noleggio a Lungo Termine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #0a0f2e;
+  --steel:     #0d1e90;
+  --blue:      #1a35c0;
+  --gold:      #5090f0;
+  --gold-l:    #70a8f7;
+  --cream:     #f0f4ff;
+  --ash:       #d5e1fa;
+  --mist:      #4a5a8a;
+  --white:     #ffffff;
+  --err:       #d63b3b;
+  --ok:        #1aab6d;
+  --radius:    6px;
+  --shadow:    0 2px 18px rgba(13,30,144,0.10);
+  --trans:     all 0.22s ease;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 0 0 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HERO ─────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--blue) 100%);
+  padding: 52px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(80,144,240,0.22) 0%, transparent 70%);
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-l);
+  border: 1px solid rgba(80,144,240,.4);
+  border-radius: 20px;
+  padding: 5px 16px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1.15;
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold-l);
+}
+.hero-sub {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: rgba(255,255,255,.55);
+  position: relative;
+}
+
+/* ─── PROGRESS ──────────────────────────────────── */
+.progress-wrap {
+  background: var(--ink);
+  padding: 0 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.progress-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+.progress-pct {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-l);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ─── LAYOUT ────────────────────────────────────── */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ─── SEZIONE ───────────────────────────────────── */
+.section {
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-top: 24px;
+  overflow: hidden;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--ash);
+}
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--steel), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-icon svg { width:16px; height:16px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.section-title {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.section-body { padding: 24px; }
+
+/* ─── TOGGLE TIPO ───────────────────────────────── */
+.tipo-toggle {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.tipo-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--mist);
+  transition: var(--trans);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.tipo-btn:first-child { border-right: 1.5px solid var(--ash); }
+.tipo-btn.active {
+  background: var(--steel);
+  color: #fff;
+}
+.tipo-btn svg { width:15px; height:15px; flex-shrink:0; }
+
+/* ─── GRIGLIA CAMPI ─────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.col-full { grid-column: 1 / -1; }
+@media(max-width: 520px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* ─── FIELD ─────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.field label .req { color: var(--gold); margin-left: 2px; }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--ash);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  transition: var(--trans);
+  -webkit-appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(80,144,240,.12);
+}
+.field textarea { resize: vertical; min-height: 90px; }
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--err);
+  box-shadow: 0 0 0 3px rgba(214,59,59,.1);
+}
+.err-msg {
+  font-size: 11.5px;
+  color: var(--err);
+  display: none;
+}
+.field.has-error .err-msg { display: block; }
+
+/* ─── DURATA PILLS ──────────────────────────────── */
+.durata-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+@media(max-width:400px) { .durata-grid { grid-template-columns: repeat(2,1fr); } }
+.durata-pill {
+  position: relative;
+  cursor: pointer;
+}
+.durata-pill input[type=radio] { position: absolute; opacity: 0; width: 0; height: 0; }
+.durata-pill label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--trans);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--mist);
+}
+.durata-pill label .num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+}
+.durata-pill label .unit { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+.durata-pill input:checked + label {
+  border-color: var(--steel);
+  background: rgba(13,30,144,.05);
+  color: var(--steel);
+}
+.durata-pill input:checked + label .num { color: var(--steel); }
+
+/* ─── KM SLIDER ─────────────────────────────────── */
+.km-wrap { display: flex; flex-direction: column; gap: 10px; }
+.km-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--steel);
+  text-align: center;
+}
+.km-display span { font-size: 14px; color: var(--mist); font-family: 'DM Sans', sans-serif; }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--ash);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  background: var(--steel);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(13,30,144,.3);
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px; height: 20px;
+  background: var(--steel);
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 6px rgba(13,30,144,.3);
+}
+.km-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--mist);
+  letter-spacing: .04em;
+}
+
+/* ─── FRANCHIGIA CARDS ──────────────────────────── */
+.franchigia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.franch-card { position: relative; cursor: pointer; }
+.franch-card input[type=radio] { position: absolute; opacity: 0; }
+.franch-card label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--trans);
+}
+.franch-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ash);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: var(--trans);
+  display: flex; align-items: center; justify-content: center;
+}
+.franch-card input:checked + label { border-color: var(--steel); background: rgba(13,30,144,.04); }
+.franch-card input:checked + label .franch-dot {
+  border-color: var(--steel);
+  background: var(--steel);
+}
+.franch-card input:checked + label .franch-dot::after {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: 50%;
+}
+.franch-info .ftitle { font-weight: 500; font-size: 14px; color: var(--ink); }
+.franch-info .fdesc { font-size: 12px; color: var(--mist); margin-top: 3px; }
+
+/* ─── SUBMIT ─────────────────────────────────────── */
+.submit-wrap {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.btn-submit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--steel);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 48px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: var(--trans);
+  position: relative;
+  overflow: hidden;
+}
+.btn-submit:hover:not(:disabled) {
+  background: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(13,30,144,.25);
+}
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+.btn-submit .spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: none;
+}
+.btn-submit.loading .spinner { display: block; }
+.btn-submit.loading .btn-txt { opacity: .6; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.submit-note {
+  font-size: 12px;
+  color: var(--mist);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.submit-note svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ─── TOAST ──────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  opacity: 0;
+  transition: all .35s ease;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--ok); }
+.toast.err { background: var(--err); }
+
+/* ─── SUCCESSO ───────────────────────────────────── */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 72px 32px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-top: 24px;
+}
+.success-screen.visible { display: flex; }
+.success-circle {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(26,171,109,.1);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+}
+.success-circle svg { width: 32px; height: 32px; }
+.success-screen h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--steel);
+  margin-bottom: 12px;
+}
+.success-screen p { font-size: 14px; color: var(--mist); line-height: 1.7; max-width: 380px; }
+.ticket-badge {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1px solid var(--ash);
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  color: var(--steel);
+  font-weight: 500;
+}
+
+/* ─── SEPARATORE ─────────────────────────────────── */
+.divider { height: 1px; background: var(--ash); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">DoubleSolution · Mobilità</div>
+  <h1>Noleggio a <em>Lungo Termine</em></h1>
+  <p class="hero-sub">Compila il modulo — ti ricontatteremo entro 24 ore lavorative</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-pct" id="progressPct">0%</div>
+</div>
+
+<!-- FORM -->
+<div class="container" id="formContainer">
+
+  <!-- SEZIONE 1 — INTESTATARIO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="section-title">1 — Intestatario</div>
+    </div>
+    <div class="section-body">
+      <!-- Toggle Azienda/Privato -->
+      <div class="tipo-toggle" id="tipoToggle">
+        <button type="button" class="tipo-btn active" data-val="Azienda" onclick="setTipo('Azienda',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          Azienda
+        </button>
+        <button type="button" class="tipo-btn" data-val="Privato" onclick="setTipo('Privato',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Privato
+        </button>
+      </div>
+      <input type="hidden" id="f_tipo" value="Azienda">
+
+      <div class="grid-2">
+        <div class="field col-full" id="wrapNomeAzienda">
+          <label>Nome Azienda <span class="req">*</span></label>
+          <input type="text" id="f_nome_azienda" placeholder="es. MCI Solution S.r.l.">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+        <div class="field col-full" id="wrapNomePrivato" style="display:none">
+          <label>Nome e Cognome <span class="req">*</span></label>
+          <input type="text" id="f_nome_privato" placeholder="es. Mario Rossi">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+
+        <div class="field" id="wrapPiva">
+          <label>Partita IVA <span class="req">*</span></label>
+          <input type="text" id="f_piva" placeholder="IT12345678901" maxlength="13">
+          <span class="err-msg">Inserire P.IVA valida</span>
+        </div>
+        <div class="field" id="wrapCf" style="display:none">
+          <label>Codice Fiscale <span class="req">*</span></label>
+          <input type="text" id="f_cf" placeholder="RSSMRA80A01H501T" maxlength="16">
+          <span class="err-msg">Inserire CF valido</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 2 — REFERENTE -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <div class="section-title">2 — Referente</div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="field col-full">
+          <label>Nome Referente <span class="req">*</span></label>
+          <input type="text" id="f_ref" placeholder="Chi gestiamo la pratica">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+        <div class="field">
+          <label>Telefono <span class="req">*</span></label>
+          <input type="tel" id="f_tel" placeholder="+39 031 000 0000">
+          <span class="err-msg">Inserire telefono valido</span>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="f_email" placeholder="nome@azienda.it">
+          <span class="err-msg">Inserire email valida</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 3 — VEICOLO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div class="section-title">3 — Veicolo</div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Marca <span class="req">*</span></label>
+          <select id="f_marca" onchange="updateModelli()">
+            <option value="">— Seleziona brand —</option>
+            <!-- ITALIANE -->
+            <optgroup label="🇮🇹 Italiane">
+              <option value="Alfa Romeo">Alfa Romeo</option>
+              <option value="Ferrari">Ferrari</option>
+              <option value="Fiat">Fiat</option>
+              <option value="Lancia">Lancia</option>
+              <option value="Lamborghini">Lamborghini</option>
+              <option value="Maserati">Maserati</option>
+            </optgroup>
+            <!-- EUROPEE -->
+            <optgroup label="🇪🇺 Europee">
+              <option value="Audi">Audi</option>
+              <option value="BMW">BMW</option>
+              <option value="Citroën">Citroën</option>
+              <option value="Cupra">Cupra</option>
+              <option value="Dacia">Dacia</option>
+              <option value="DS">DS</option>
+              <option value="Ford Europe">Ford</option>
+              <option value="Opel">Opel</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Mini">Mini</option>
+              <option value="Peugeot">Peugeot</option>
+              <option value="Porsche">Porsche</option>
+              <option value="Renault">Renault</option>
+              <option value="SEAT">SEAT</option>
+              <option value="Škoda">Škoda</option>
+              <option value="Smart">Smart</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="Volvo">Volvo</option>
+            </optgroup>
+            <!-- AMERICANE -->
+            <optgroup label="🇺🇸 Americane">
+              <option value="Cadillac">Cadillac</option>
+              <option value="Dodge">Dodge</option>
+              <option value="Ford USA">Ford (USA)</option>
+              <option value="Jeep">Jeep</option>
+              <option value="Tesla">Tesla</option>
+            </optgroup>
+            <!-- GIAPPONESI -->
+            <optgroup label="🇯🇵 Giapponesi">
+              <option value="Honda">Honda</option>
+              <option value="Lexus">Lexus</option>
+              <option value="Mazda">Mazda</option>
+              <option value="Mitsubishi">Mitsubishi</option>
+              <option value="Nissan">Nissan</option>
+              <option value="Subaru">Subaru</option>
+              <option value="Suzuki">Suzuki</option>
+              <option value="Toyota">Toyota</option>
+            </optgroup>
+            <!-- COREANE -->
+            <optgroup label="🇰🇷 Coreane">
+              <option value="Genesis">Genesis</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Kia">Kia</option>
+            </optgroup>
+            <!-- CINESI -->
+            <optgroup label="🇨🇳 Cinesi / Altre">
+              <option value="BYD">BYD</option>
+              <option value="Lynk & Co">Lynk & Co</option>
+              <option value="MG">MG</option>
+              <option value="Polestar">Polestar</option>
+            </optgroup>
+          </select>
+          <span class="err-msg">Seleziona una marca</span>
+        </div>
+        <div class="field">
+          <label>Modello <span class="req">*</span></label>
+          <input type="text" id="f_modello" placeholder="es. Giulia, Serie 3, Puma…">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+        <div class="field col-full" id="modelli-suggeriti" style="display:none">
+          <label>Modelli comuni — clicca per inserire</label>
+          <div id="modelli-pills" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 4 — CONTRATTO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="section-title">4 — Contratto</div>
+    </div>
+    <div class="section-body">
+      <!-- DURATA -->
+      <div class="field" style="margin-bottom:24px">
+        <label>Durata Contratto <span class="req">*</span></label>
+        <div class="durata-grid" style="margin-top:8px">
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d24" value="24">
+            <label for="d24"><span class="num">24</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d36" value="36" checked>
+            <label for="d36"><span class="num">36</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d48" value="48">
+            <label for="d48"><span class="num">48</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d60" value="60">
+            <label for="d60"><span class="num">60</span><span class="unit">Mesi</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- KM TOTALI -->
+      <div class="field" style="margin-bottom:24px">
+        <label>Km Totali <span class="req">*</span></label>
+        <div class="km-wrap" style="margin-top:8px">
+          <div class="km-display" id="kmDisplay">60.000 <span>km</span></div>
+          <input type="range" id="f_km" min="10000" max="200000" step="5000" value="60000" oninput="updateKm()">
+          <div class="km-marks">
+            <span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRANCHIGIA -->
+      <div class="field">
+        <label>Franchigia <span class="req">*</span></label>
+        <div class="franchigia-grid" style="margin-top:8px">
+          <div class="franch-card">
+            <input type="radio" name="franchigia" id="fNo" value="No" checked>
+            <label for="fNo">
+              <div class="franch-dot"></div>
+              <div class="franch-info">
+                <div class="ftitle">Senza Franchigia</div>
+                <div class="fdesc">Copertura totale senza quota a carico</div>
+              </div>
+            </label>
+          </div>
+          <div class="franch-card">
+            <input type="radio" name="franchigia" id="fSi" value="Sì">
+            <label for="fSi">
+              <div class="franch-dot"></div>
+              <div class="franch-info">
+                <div class="ftitle">Con Franchigia</div>
+                <div class="fdesc">Quota fissa a tuo carico in caso di sinistro</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 5 — NOTE -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="section-title">5 — Note aggiuntive</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>Note libere</label>
+        <textarea id="f_note" placeholder="Allestimento specifico, colori preferiti, accessori, richieste particolari…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button type="button" class="btn-submit" id="btnSubmit" onclick="submitForm()">
+      <div class="spinner"></div>
+      <span class="btn-txt">Invia Richiesta</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+    <div class="submit-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      I tuoi dati sono al sicuro e non vengono condivisi con terze parti
+    </div>
+  </div>
+
+  <!-- SUCCESSO -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1aab6d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <h2>Richiesta Inviata</h2>
+    <p>Grazie per aver compilato il modulo. Il nostro team ti contatterà entro <strong>24 ore lavorative</strong> con un preventivo personalizzato.</p>
+    <div class="ticket-badge" id="ticketBadge" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      <span id="ticketNum">Ticket #—</span>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONFIGURAZIONE ──────────────────────────────────────────────
+// ⚠️  Modifica questi due valori prima del deploy
+var FD_DOMAIN   = 'doubledsolution';          // solo il sottodominio, es. "doubledsolution"
+var PROXY_URL   = 'https://incomparable-pixie-3b11e8.netlify.app/api/ticket'; // URL proxy attuale
+// ─────────────────────────────────────────────────────────────────
+
+// Modelli suggeriti per brand
+var MODELLI = {
+  'Alfa Romeo':    ['Giulia','Stelvio','Tonale','Giulietta'],
+  'Fiat':          ['500','Panda','Tipo','500X','500L','Doblò','Fiorino'],
+  'Lancia':        ['Ypsilon','Delta'],
+  'BMW':           ['Serie 1','Serie 2','Serie 3','Serie 4','Serie 5','X1','X3','X5','iX1','i4','i5'],
+  'Mercedes-Benz': ['Classe A','Classe B','Classe C','Classe E','GLA','GLC','GLB','EQA','EQB','EQC','Sprinter','Vito'],
+  'Volkswagen':    ['Polo','Golf','Tiguan','T-Cross','T-Roc','Touareg','Passat','ID.3','ID.4','ID.7'],
+  'Audi':          ['A1','A3','A4','A6','Q2','Q3','Q5','Q8','e-tron','Q4 e-tron'],
+  'Peugeot':       ['208','308','408','3008','5008','e-208','e-308','e-3008'],
+  'Renault':       ['Clio','Megane','Captur','Austral','Arkana','Zoe','Megane E-Tech'],
+  'Toyota':        ['Aygo X','Yaris','Corolla','C-HR','RAV4','Yaris Cross','bZ4X'],
+  'Hyundai':       ['i10','i20','i30','Tucson','Kona','Santa Fe','IONIQ 5','IONIQ 6'],
+  'Kia':           ['Picanto','Stonic','Ceed','Sportage','Sorento','Niro','EV6','EV9'],
+  'Ford Europe':   ['Fiesta','Focus','Puma','Kuga','Explorer','Mustang Mach-E'],
+  'Opel':          ['Corsa','Astra','Mokka','Crossland','Grandland','Combo'],
+  'Škoda':         ['Fabia','Octavia','Karoq','Kodiaq','Scala','Enyaq'],
+  'Dacia':         ['Sandero','Duster','Jogger','Spring','Lodgy'],
+  'Jeep':          ['Renegade','Compass','Avenger','Wrangler','Grand Cherokee'],
+  'Tesla':         ['Model 3','Model Y','Model S','Model X','Cybertruck'],
+  'BYD':           ['SEAL','ATTO 3','Dolphin','ATTO 2','HAN'],
+  'Volvo':         ['XC40','XC60','XC90','C40 Recharge','EX30','EX40'],
+};
+
+// ─── TIPO INTESTATARIO ───────────────────────────
+function setTipo(val, btn) {
+  document.getElementById('f_tipo').value = val;
+  document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  var isPrivato = val === 'Privato';
+  toggle('wrapNomeAzienda', !isPrivato);
+  toggle('wrapNomePrivato', isPrivato);
+  toggle('wrapPiva', !isPrivato);
+  toggle('wrapCf', isPrivato);
+  updateProgress();
+}
+
+function toggle(id, show) {
+  document.getElementById(id).style.display = show ? '' : 'none';
+}
+
+// ─── MODELLI SUGGERITI ───────────────────────────
+function updateModelli() {
+  var marca = document.getElementById('f_marca').value;
+  var wrap  = document.getElementById('modelli-suggeriti');
+  var pills = document.getElementById('modelli-pills');
+  if (MODELLI[marca]) {
+    pills.innerHTML = '';
+    MODELLI[marca].forEach(function(m) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = m;
+      b.style.cssText = 'padding:6px 14px;border:1.5px solid var(--ash);border-radius:20px;background:transparent;font-family:inherit;font-size:12.5px;color:var(--mist);cursor:pointer;transition:all .18s';
+      b.onmouseenter = function() { this.style.background='var(--steel)'; this.style.color='#fff'; this.style.borderColor='var(--steel)'; };
+      b.onmouseleave = function() { this.style.background='transparent'; this.style.color='var(--mist)'; this.style.borderColor='var(--ash)'; };
+      b.onclick = function() { document.getElementById('f_modello').value = m; updateProgress(); };
+      pills.appendChild(b);
+    });
+    wrap.style.display = '';
+  } else {
+    wrap.style.display = 'none';
+  }
+  updateProgress();
+}
+
+// ─── KM SLIDER ───────────────────────────────────
+function updateKm() {
+  var v = parseInt(document.getElementById('f_km').value);
+  document.getElementById('kmDisplay').innerHTML = v.toLocaleString('it-IT') + ' <span>km</span>';
+  updateProgress();
+}
+
+// ─── PROGRESS ────────────────────────────────────
+function updateProgress() {
+  var tipo = document.getElementById('f_tipo').value;
+  var fields = [
+    tipo === 'Privato' ? document.getElementById('f_nome_privato') : document.getElementById('f_nome_azienda'),
+    tipo === 'Privato' ? document.getElementById('f_cf') : document.getElementById('f_piva'),
+    document.getElementById('f_ref'),
+    document.getElementById('f_tel'),
+    document.getElementById('f_email'),
+    document.getElementById('f_marca'),
+    document.getElementById('f_modello'),
+  ];
+  var filled = fields.filter(function(f){ return f && f.value.trim() !== ''; }).length;
+  var pct = Math.round((filled / fields.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+// ─── VALIDAZIONE ─────────────────────────────────
+function setErr(id, hasErr) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.closest('.field').classList.toggle('has-error', hasErr);
+}
+function clearErr(id) { setErr(id, false); }
+
+function validate() {
+  var ok = true;
+  var tipo = document.getElementById('f_tipo').value;
+
+  if (tipo === 'Azienda') {
+    var na = document.getElementById('f_nome_azienda').value.trim();
+    if (!na) { setErr('f_nome_azienda', true); ok = false; } else clearErr('f_nome_azienda');
+    var piva = document.getElementById('f_piva').value.trim();
+    if (piva.length < 5) { setErr('f_piva', true); ok = false; } else clearErr('f_piva');
+  } else {
+    var np = document.getElementById('f_nome_privato').value.trim();
+    if (!np) { setErr('f_nome_privato', true); ok = false; } else clearErr('f_nome_privato');
+    var cf = document.getElementById('f_cf').value.trim();
+    if (cf.length < 11) { setErr('f_cf', true); ok = false; } else clearErr('f_cf');
+  }
+
+  var ref = document.getElementById('f_ref').value.trim();
+  if (!ref) { setErr('f_ref', true); ok = false; } else clearErr('f_ref');
+
+  var tel = document.getElementById('f_tel').value.trim();
+  if (tel.length < 6) { setErr('f_tel', true); ok = false; } else clearErr('f_tel');
+
+  var email = document.getElementById('f_email').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('f_email', true); ok = false; } else clearErr('f_email');
+
+  var marca = document.getElementById('f_marca').value;
+  if (!marca) { setErr('f_marca', true); ok = false; } else clearErr('f_marca');
+
+  var mod = document.getElementById('f_modello').value.trim();
+  if (!mod) { setErr('f_modello', true); ok = false; } else clearErr('f_modello');
+
+  return ok;
+}
+
+// ─── TOAST ───────────────────────────────────────
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3800);
+}
+
+// ─── BUILD DESCRIZIONE HTML TICKET ───────────────
+function buildDesc(d) {
+  var rows = [
+    ['Tipo Intestatario', d.tipo],
+    ['Azienda / Nome',    d.nome],
+    [d.tipo === 'Privato' ? 'Codice Fiscale' : 'Partita IVA', d.piva_cf],
+    ['Referente',         d.ref],
+    ['Telefono',          d.tel],
+    ['Email',             d.email],
+    ['Marca',             d.marca],
+    ['Modello',           d.modello],
+    ['Durata',            d.durata + ' mesi'],
+    ['Km Totali',         parseInt(d.km).toLocaleString('it-IT') + ' km'],
+    ['Franchigia',        d.franchigia],
+    ['Note',              d.note || '—'],
+  ];
+  var html = '<h2 style="color:#0a0f2e;font-family:sans-serif">Richiesta NLT</h2><table style="width:100%;border-collapse:collapse;font-family:sans-serif;font-size:14px">';
+  rows.forEach(function(r) {
+    html += '<tr><td style="padding:8px 12px;background:#f0f4ff;color:#4a5a8a;font-weight:500;width:38%;border:1px solid #d5e1fa">' + r[0] + '</td><td style="padding:8px 12px;border:1px solid #d5e1fa;color:#0a0f2e">' + r[1] + '</td></tr>';
+  });
+  html += '</table>';
+  return html;
+}
+
+// ─── SUBMIT ──────────────────────────────────────
+function submitForm() {
+  if (!validate()) {
+    showToast('⚠️ Compila tutti i campi obbligatori', 'err');
+    var firstErr = document.querySelector('.has-error input, .has-error select, .has-error textarea');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  var tipo  = document.getElementById('f_tipo').value;
+  var nome  = tipo === 'Privato'
+    ? document.getElementById('f_nome_privato').value.trim()
+    : document.getElementById('f_nome_azienda').value.trim();
+  var pivaOcf = tipo === 'Privato'
+    ? document.getElementById('f_cf').value.trim()
+    : document.getElementById('f_piva').value.trim();
+  var ref       = document.getElementById('f_ref').value.trim();
+  var tel       = document.getElementById('f_tel').value.trim();
+  var email     = document.getElementById('f_email').value.trim();
+  var marca     = document.getElementById('f_marca').value;
+  var modello   = document.getElementById('f_modello').value.trim();
+  var durata    = document.querySelector('input[name=durata]:checked').value;
+  var km        = document.getElementById('f_km').value;
+  var franchigia = document.querySelector('input[name=franchigia]:checked').value;
+  var note      = document.getElementById('f_note').value.trim();
+
+  var d = { tipo: tipo, nome: nome, piva_cf: pivaOcf, ref: ref, tel: tel, email: email,
+            marca: marca, modello: modello, durata: durata, km: km,
+            franchigia: franchigia, note: note };
+
+  var payload = {
+    subject:     'NLT — ' + marca + ' ' + modello + ' (' + durata + ' mesi) — ' + nome,
+    description: buildDesc(d),
+    email:       email,
+    name:        ref,
+    phone:       tel,
+    priority:    2,
+    tags:        ['nlt', 'noleggio-lungo-termine'],
+    custom_fields: {
+      cf_tipo_intestatario: tipo,
+      cf_piva_cf:           pivaOcf,
+      cf_marca:             marca,
+      cf_modello:           modello,
+      cf_durata_mesi:       parseInt(durata),
+      cf_km_totali:         parseInt(km),
+      cf_franchigia:        franchigia === 'Sì'
+    }
+  };
+
+  var btn = document.getElementById('btnSubmit');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  fetch(PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json().then(function(data){ return { status: r.status, data: data }; }); })
+  .then(function(res) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    if (res.status === 200 || res.status === 201 || res.data.ok || res.data.id) {
+      // Successo
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('successScreen').classList.add('visible');
+      // Aggiorna progress 100%
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('progressPct').textContent = '100%';
+      // Mostra numero ticket se disponibile
+      var ticketId = res.data.id || (res.data.ticket && res.data.ticket.id);
+      if (ticketId) {
+        document.getElementById('ticketNum').textContent = 'Ticket #' + ticketId;
+        document.getElementById('ticketBadge').style.display = 'inline-flex';
+      }
+      showToast('✅ Richiesta inviata con successo!', 'ok');
+    } else {
+      var errMsg = res.data.error || res.data.description || 'Errore invio. Riprova tra qualche istante.';
+      showToast('❌ ' + errMsg, 'err');
+    }
+  })
+  .catch(function(err) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    console.error('[NLT] Errore fetch:', err);
+    showToast('❌ Connessione al server fallita. Riprova.', 'err');
+  });
+}
+
+// ─── CLEAR ERRORS ON INPUT ───────────────────────
+document.querySelectorAll('input, select, textarea').forEach(function(el) {
+  el.addEventListener('input', function() {
+    var f = el.closest('.field');
+    if (f) f.classList.remove('has-error');
+    updateProgress();
+  });
+});
+
+// Init
+updateProgress();
+updateKm();
+</script>
+</body>
+</html>
