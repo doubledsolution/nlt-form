@@ -3,410 +3,1064 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Richiesta Noleggio a Lungo Termine — DoubleDsolution</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Richiesta Noleggio a Lungo Termine</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
-#nlt-root{all:initial;display:block;font-family:"DM Sans",sans-serif}
-#nlt-root *,#nlt-root *::before,#nlt-root *::after{box-sizing:border-box;margin:0;padding:0}
-#nlt-root{--ni:#0a1235;--nn:#0d1e90;--nb:#1a35b8;--ns:#5090f0;--nc:#eef2ff;--na:#c8d4f8;--nm:#3a4e8c;--ne:#c0392b;color:var(--ni);max-width:720px;margin:0 auto;padding:32px 16px 80px}
-#nlt-root .hd{text-align:center;margin-bottom:28px}
-#nlt-root .hd .brand{font-size:24px;font-weight:600;letter-spacing:.06em;color:var(--nn);margin-bottom:4px}
-#nlt-root .hd .brand span{color:var(--nb)}
-#nlt-root .hd .ey{font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--nb);margin-bottom:10px}
-#nlt-root .hd h1{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(28px,4vw,44px);color:var(--nn);line-height:1.1}
-#nlt-root .hd h1 em{font-style:italic;color:var(--nb)}
-#nlt-root .hd .rule{width:44px;height:1px;background:var(--nb);margin:14px auto 0;opacity:.45}
-#nlt-root .prog{margin-bottom:18px}
-#nlt-root .prog-row{display:flex;justify-content:space-between;font-size:11px;color:var(--nm);letter-spacing:.07em;margin-bottom:7px}
-#nlt-root .prog-track{height:2px;background:var(--na);border-radius:2px}
-#nlt-root .prog-fill{height:100%;background:linear-gradient(90deg,var(--nn),var(--ns));border-radius:2px;transition:width .4s ease;width:0%}
-#nlt-root .card{background:#fff;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.05),0 16px 40px rgba(0,0,0,.08);overflow:hidden}
-#nlt-root .cbar{height:3px;background:linear-gradient(90deg,var(--nn),var(--ns),transparent)}
-#nlt-root .cbody{padding:40px 48px}
-@media(max-width:560px){#nlt-root .cbody{padding:28px 20px}}
-#nlt-root .sec{margin-bottom:36px}
-#nlt-root .sttl{font-family:"Cormorant Garamond",serif;font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--nm);border-bottom:1px solid var(--na);padding-bottom:9px;margin-bottom:24px}
-#nlt-root .g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:520px){#nlt-root .g2{grid-template-columns:1fr}}
-#nlt-root .f{display:flex;flex-direction:column;gap:6px}
-#nlt-root .f>label{font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--nm)}
-#nlt-root .f .req{color:var(--nb)}
-#nlt-root .f input,#nlt-root .f select,#nlt-root .f textarea{font-family:"DM Sans",sans-serif!important;font-size:14px!important;font-weight:300!important;color:var(--ni)!important;background:var(--nc)!important;border:1px solid var(--na)!important;border-radius:2px!important;padding:12px 15px!important;outline:none!important;width:100%!important;appearance:none!important;-webkit-appearance:none!important;transition:border-color .2s,background .2s!important;box-shadow:none!important}
-#nlt-root .f input:focus,#nlt-root .f select:focus,#nlt-root .f textarea:focus{background:#fff!important;border-color:var(--nb)!important;box-shadow:0 0 0 3px rgba(26,53,184,.09)!important}
-#nlt-root .f input::placeholder,#nlt-root .f textarea::placeholder{color:#bbb!important}
-#nlt-root .f .err{font-size:11px;color:var(--ne);display:none}
-#nlt-root .f.bad .err{display:block}
-#nlt-root .f.bad input,#nlt-root .f.bad select{border-color:var(--ne)!important}
-#nlt-root .sw{position:relative}
-#nlt-root .sw::after{content:"";position:absolute;right:14px;top:50%;transform:translateY(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--nb);pointer-events:none}
-#nlt-root .pills{display:flex;border:1px solid var(--na);border-radius:2px;overflow:hidden}
-#nlt-root .pill{flex:1;background:var(--nc);border:none!important;padding:11px;font-family:"DM Sans",sans-serif;font-size:13px;color:var(--nm);cursor:pointer;transition:background .2s,color .2s;border-right:1px solid var(--na)!important}
-#nlt-root .pill:last-child{border-right:none!important}
-#nlt-root .pill.on{background:var(--nn);color:#fff}
-#nlt-root .kmd{text-align:right;font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--nn);margin-bottom:8px}
-#nlt-root .kmd small{font-size:13px;color:var(--nm);font-family:"DM Sans",sans-serif}
-#nlt-root .f input[type=range]{padding:0!important;background:transparent!important;border:none!important;box-shadow:none!important;cursor:pointer}
-#nlt-root .f input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--nn) 0%,var(--nn) var(--pct,20%),var(--na) var(--pct,20%))}
-#nlt-root .f input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--nn);border:2px solid #fff;box-shadow:0 2px 8px rgba(13,30,144,.35);margin-top:-8px}
-#nlt-root .f input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--nn);border:2px solid #fff}
-#nlt-root .kmtk{display:flex;justify-content:space-between;font-size:10px;color:#bbb;margin-top:6px}
-#nlt-root .frg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-#nlt-root .frc{border:1px solid var(--na);border-radius:2px;padding:14px;cursor:pointer;transition:border-color .2s,background .2s;display:flex;flex-direction:column;gap:5px}
-#nlt-root .frc.on{border-color:var(--nn);background:rgba(13,30,144,.04)}
-#nlt-root .frt{display:flex;align-items:center;gap:9px}
-#nlt-root .frd{width:15px;height:15px;border-radius:50%;border:2px solid var(--na);flex-shrink:0;transition:all .2s}
-#nlt-root .frc.on .frd{border-color:var(--nn);background:var(--nn);box-shadow:inset 0 0 0 3px #fff}
-#nlt-root .frl{font-size:14px;color:var(--ni)}
-#nlt-root .frdesc{font-size:11px;color:var(--nm);line-height:1.5;padding-left:24px}
-#nlt-root .f textarea{resize:vertical;min-height:88px;line-height:1.6}
-#nlt-root .subw{margin-top:36px;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-#nlt-root .subn{font-size:11px;color:#bbb;letter-spacing:.04em}
-#nlt-root .btn{display:inline-flex;align-items:center;gap:11px;background:var(--nn);color:#fff;border:none!important;border-radius:2px;padding:16px 36px;cursor:pointer;font-family:"DM Sans",sans-serif!important;font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;position:relative;overflow:hidden;transition:color .3s}
-#nlt-root .btn::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--ns);transition:width .3s}
-#nlt-root .btn:hover::before{width:100%}
-#nlt-root .btn:hover{color:var(--nn)}
-#nlt-root .btn>*{position:relative;z-index:1}
-#nlt-root .btn:disabled{opacity:.55;cursor:not-allowed}
-#nlt-root .spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:nlt-spin .7s linear infinite;display:none}
-#nlt-root .btn.loading .spin{display:block}
-#nlt-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);padding:13px 22px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:99999;white-space:nowrap}
-#nlt-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#nlt-toast.ok{background:var(--nn);color:#fff}
-#nlt-toast.err{background:var(--ne);color:#fff}
-@keyframes nlt-spin{to{transform:rotate(360deg)}}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:       #0a0f2e;
+  --steel:     #0d1e90;
+  --blue:      #1a35c0;
+  --gold:      #5090f0;
+  --gold-l:    #70a8f7;
+  --cream:     #f0f4ff;
+  --ash:       #d5e1fa;
+  --mist:      #4a5a8a;
+  --white:     #ffffff;
+  --err:       #d63b3b;
+  --ok:        #1aab6d;
+  --radius:    6px;
+  --shadow:    0 2px 18px rgba(13,30,144,0.10);
+  --trans:     all 0.22s ease;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 0 0 80px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── HERO ─────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--blue) 100%);
+  padding: 52px 24px 44px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:'';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(80,144,240,0.22) 0%, transparent 70%);
+}
+.hero-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-l);
+  border: 1px solid rgba(80,144,240,.4);
+  border-radius: 20px;
+  padding: 5px 16px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1.15;
+  position: relative;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--gold-l);
+}
+.hero-sub {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: rgba(255,255,255,.55);
+  position: relative;
+}
+
+/* ─── PROGRESS ──────────────────────────────────── */
+.progress-wrap {
+  background: var(--ink);
+  padding: 0 24px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.progress-track {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,.12);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-l));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+.progress-pct {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-l);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ─── LAYOUT ────────────────────────────────────── */
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ─── SEZIONE ───────────────────────────────────── */
+.section {
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-top: 24px;
+  overflow: hidden;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--ash);
+}
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--steel), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.section-icon svg { width:16px; height:16px; fill:none; stroke:#fff; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.section-title {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.section-body { padding: 24px; }
+
+/* ─── TOGGLE TIPO ───────────────────────────────── */
+.tipo-toggle {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.tipo-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--mist);
+  transition: var(--trans);
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+}
+.tipo-btn:first-child { border-right: 1.5px solid var(--ash); }
+.tipo-btn.active {
+  background: var(--steel);
+  color: #fff;
+}
+.tipo-btn svg { width:15px; height:15px; flex-shrink:0; }
+
+/* ─── GRIGLIA CAMPI ─────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.col-full { grid-column: 1 / -1; }
+@media(max-width: 520px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* ─── FIELD ─────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--mist);
+}
+.field label .req { color: var(--gold); margin-left: 2px; }
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--ash);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  transition: var(--trans);
+  -webkit-appearance: none;
+}
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5a8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(80,144,240,.12);
+}
+.field textarea { resize: vertical; min-height: 90px; }
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+  border-color: var(--err);
+  box-shadow: 0 0 0 3px rgba(214,59,59,.1);
+}
+.err-msg {
+  font-size: 11.5px;
+  color: var(--err);
+  display: none;
+}
+.field.has-error .err-msg { display: block; }
+
+/* ─── DURATA PILLS ──────────────────────────────── */
+.durata-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+@media(max-width:400px) { .durata-grid { grid-template-columns: repeat(2,1fr); } }
+.durata-pill {
+  position: relative;
+  cursor: pointer;
+}
+.durata-pill input[type=radio] { position: absolute; opacity: 0; width: 0; height: 0; }
+.durata-pill label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--trans);
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--mist);
+}
+.durata-pill label .num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+}
+.durata-pill label .unit { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-top: 3px; }
+.durata-pill input:checked + label {
+  border-color: var(--steel);
+  background: rgba(13,30,144,.05);
+  color: var(--steel);
+}
+.durata-pill input:checked + label .num { color: var(--steel); }
+
+/* ─── KM SLIDER ─────────────────────────────────── */
+.km-wrap { display: flex; flex-direction: column; gap: 10px; }
+.km-display {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--steel);
+  text-align: center;
+}
+.km-display span { font-size: 14px; color: var(--mist); font-family: 'DM Sans', sans-serif; }
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--ash);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  background: var(--steel);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(13,30,144,.3);
+  cursor: pointer;
+}
+input[type=range]::-moz-range-thumb {
+  width: 20px; height: 20px;
+  background: var(--steel);
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 6px rgba(13,30,144,.3);
+}
+.km-marks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--mist);
+  letter-spacing: .04em;
+}
+
+/* ─── FRANCHIGIA CARDS ──────────────────────────── */
+.franchigia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.franch-card { position: relative; cursor: pointer; }
+.franch-card input[type=radio] { position: absolute; opacity: 0; }
+.franch-card label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1.5px solid var(--ash);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--trans);
+}
+.franch-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ash);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: var(--trans);
+  display: flex; align-items: center; justify-content: center;
+}
+.franch-card input:checked + label { border-color: var(--steel); background: rgba(13,30,144,.04); }
+.franch-card input:checked + label .franch-dot {
+  border-color: var(--steel);
+  background: var(--steel);
+}
+.franch-card input:checked + label .franch-dot::after {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: 50%;
+}
+.franch-info .ftitle { font-weight: 500; font-size: 14px; color: var(--ink); }
+.franch-info .fdesc { font-size: 12px; color: var(--mist); margin-top: 3px; }
+
+/* ─── SUBMIT ─────────────────────────────────────── */
+.submit-wrap {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.btn-submit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--steel);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 48px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: var(--trans);
+  position: relative;
+  overflow: hidden;
+}
+.btn-submit:hover:not(:disabled) {
+  background: var(--blue);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(13,30,144,.25);
+}
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; }
+.btn-submit .spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  display: none;
+}
+.btn-submit.loading .spinner { display: block; }
+.btn-submit.loading .btn-txt { opacity: .6; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.submit-note {
+  font-size: 12px;
+  color: var(--mist);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.submit-note svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+/* ─── TOAST ──────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: #fff;
+  padding: 13px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  opacity: 0;
+  transition: all .35s ease;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { background: var(--ok); }
+.toast.err { background: var(--err); }
+
+/* ─── SUCCESSO ───────────────────────────────────── */
+.success-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 72px 32px;
+  background: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  margin-top: 24px;
+}
+.success-screen.visible { display: flex; }
+.success-circle {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(26,171,109,.1);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+}
+.success-circle svg { width: 32px; height: 32px; }
+.success-screen h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--steel);
+  margin-bottom: 12px;
+}
+.success-screen p { font-size: 14px; color: var(--mist); line-height: 1.7; max-width: 380px; }
+.ticket-badge {
+  margin-top: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--cream);
+  border: 1px solid var(--ash);
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 13px;
+  color: var(--steel);
+  font-weight: 500;
+}
+
+/* ─── SEPARATORE ─────────────────────────────────── */
+.divider { height: 1px; background: var(--ash); margin: 20px 0; }
 </style>
 </head>
 <body>
-<div id="nlt-root">
-  <div class="hd">
-    <div class="brand">Double<span>D</span>solution</div>
-    <div class="ey">Portale DoubleDsolution</div>
-    <h1>Noleggio a <em>Lungo Termine</em></h1>
-    <div class="rule"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">DoubleSolution · Mobilità</div>
+  <h1>Noleggio a <em>Lungo Termine</em></h1>
+  <p class="hero-sub">Compila il modulo — ti ricontatteremo entro 24 ore lavorative</p>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
   </div>
-  <div class="prog">
-    <div class="prog-row"><span>Completamento</span><span id="np">0%</span></div>
-    <div class="prog-track"><div class="prog-fill" id="nf"></div></div>
-  </div>
-  <div class="card">
-    <div class="cbar"></div>
-    <div class="cbody" id="nb">
-      <form id="nlt-form" name="nlt-richiesta" netlify data-netlify="true" novalidate>
-        <input type="hidden" name="form-name" value="nlt-richiesta">
-        <div class="sec">
-          <div class="sttl">01 — Intestatario</div>
-          <div class="f" style="margin-bottom:20px">
-            <label>Tipo Intestatario <span class="req">*</span></label>
-            <div class="pills">
-              <button type="button" class="pill on" id="paz" onclick="NLT.tipo('Azienda')">&#127970;&nbsp; Azienda</button>
-              <button type="button" class="pill" id="ppr" onclick="NLT.tipo('Privato')">&#128100;&nbsp; Privato</button>
-            </div>
-            <input type="hidden" id="ntipo" value="Azienda">
-          </div>
-          <div class="g2">
-            <div class="f" id="ff-nome"><label id="lnome">Nome Azienda <span class="req">*</span></label><input type="text" id="nnome" placeholder="Ragione sociale"><span class="err">Campo obbligatorio</span></div>
-            <div class="f" id="ff-piva"><label id="lpiva">Partita IVA <span class="req">*</span></label><input type="text" id="npiva" placeholder="IT12345678901" maxlength="13"><span class="err">Campo obbligatorio</span></div>
-          </div>
+  <div class="progress-pct" id="progressPct">0%</div>
+</div>
+
+<!-- FORM -->
+<div class="container" id="formContainer">
+
+  <!-- SEZIONE 1 — INTESTATARIO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="section-title">1 — Intestatario</div>
+    </div>
+    <div class="section-body">
+      <!-- Toggle Azienda/Privato -->
+      <div class="tipo-toggle" id="tipoToggle">
+        <button type="button" class="tipo-btn active" data-val="Azienda" onclick="setTipo('Azienda',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          Azienda
+        </button>
+        <button type="button" class="tipo-btn" data-val="Privato" onclick="setTipo('Privato',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          Privato
+        </button>
+      </div>
+      <input type="hidden" id="f_tipo" value="Azienda">
+
+      <div class="grid-2">
+        <div class="field col-full" id="wrapNomeAzienda">
+          <label>Nome Azienda <span class="req">*</span></label>
+          <input type="text" id="f_nome_azienda" placeholder="es. MCI Solution S.r.l.">
+          <span class="err-msg">Campo obbligatorio</span>
         </div>
-        <div class="sec">
-          <div class="sttl">02 — Referente</div>
-          <div class="g2">
-            <div class="f" id="ff-ref"><label>Nome Referente <span class="req">*</span></label><input type="text" id="nref" placeholder="Nome e Cognome"><span class="err">Campo obbligatorio</span></div>
-            <div class="f" id="ff-tel"><label>Telefono <span class="req">*</span></label><input type="tel" id="ntel" placeholder="+39 000 000 0000"><span class="err">Numero non valido</span></div>
-            <div class="f" id="ff-email" style="grid-column:1/-1"><label>Email <span class="req">*</span></label><input type="email" id="nemail" placeholder="nome@azienda.it"><span class="err">Email non valida</span></div>
-          </div>
+        <div class="field col-full" id="wrapNomePrivato" style="display:none">
+          <label>Nome e Cognome <span class="req">*</span></label>
+          <input type="text" id="f_nome_privato" placeholder="es. Mario Rossi">
+          <span class="err-msg">Campo obbligatorio</span>
         </div>
-        <div class="sec">
-          <div class="sttl">03 — Veicolo Desiderato</div>
-          <div class="g2">
-            <div class="f" id="ff-marca"><label>Marca <span class="req">*</span></label><div class="sw"><select id="nmarca"></select></div><span class="err">Seleziona una marca</span></div>
-            <div class="f" id="ff-modello"><label>Modello <span class="req">*</span></label><input type="text" id="nmodello" placeholder="es. Giulia, Serie 3..."><span class="err">Campo obbligatorio</span></div>
-          </div>
+
+        <div class="field" id="wrapPiva">
+          <label>Partita IVA <span class="req">*</span></label>
+          <input type="text" id="f_piva" placeholder="IT12345678901" maxlength="13">
+          <span class="err-msg">Inserire P.IVA valida</span>
         </div>
-        <div class="sec">
-          <div class="sttl">04 — Parametri Contratto</div>
-          <div class="f" style="margin-bottom:26px">
-            <label>Durata <span class="req">*</span></label>
-            <div class="pills">
-              <button type="button" class="pill" onclick="NLT.durata('24',this)">24 mesi</button>
-              <button type="button" class="pill on" onclick="NLT.durata('36',this)">36 mesi</button>
-              <button type="button" class="pill" onclick="NLT.durata('48',this)">48 mesi</button>
-              <button type="button" class="pill" onclick="NLT.durata('60',this)">60 mesi</button>
-            </div>
-            <input type="hidden" id="ndurata" value="36">
-          </div>
-          <div class="f" style="margin-bottom:26px">
-            <label>Km Totali Previsti <span class="req">*</span></label>
-            <div class="kmd"><span id="nkmv">40.000</span> <small>km totali</small></div>
-            <input type="range" id="nkms" min="10000" max="200000" step="5000" value="40000" oninput="NLT.km(this.value)">
-            <div class="kmtk"><span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span></div>
-            <input type="hidden" id="nkm" value="40000">
-          </div>
-          <div class="f">
-            <label>Franchigia <span class="req">*</span></label>
-            <div class="frg">
-              <div class="frc on" id="frno" onclick="NLT.fr('No')"><div class="frt"><div class="frd"></div><div class="frl">No, senza franchigia</div></div><div class="frdesc">Nessuna franchigia in caso di sinistro</div></div>
-              <div class="frc" id="frsi" onclick="NLT.fr('Si')"><div class="frt"><div class="frd"></div><div class="frl">Si, con franchigia</div></div><div class="frdesc">Franchigia da definire nel contratto</div></div>
-            </div>
-            <input type="hidden" id="nfr" value="No">
-          </div>
+        <div class="field" id="wrapCf" style="display:none">
+          <label>Codice Fiscale <span class="req">*</span></label>
+          <input type="text" id="f_cf" placeholder="RSSMRA80A01H501T" maxlength="16">
+          <span class="err-msg">Inserire CF valido</span>
         </div>
-        <div class="sec">
-          <div class="sttl">05 — Note Aggiuntive</div>
-          <div class="f"><label>Note <span style="font-size:10px;color:#bbb;font-weight:400;text-transform:none;letter-spacing:0">(opzionale)</span></label><textarea id="nnote" placeholder="Colore, optional, esigenze particolari..."></textarea></div>
-        </div>
-        <div class="subw">
-          <div class="subn">* Campi obbligatori — Dati trattati ai sensi del GDPR</div>
-          <button type="submit" class="btn" id="nbtn">
-            <div class="spin"></div>
-            <span>Invia Richiesta</span>
-            <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
-</div>
-<div id="nlt-toast"></div>
+
+  <!-- SEZIONE 2 — REFERENTE -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <div class="section-title">2 — Referente</div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="field col-full">
+          <label>Nome Referente <span class="req">*</span></label>
+          <input type="text" id="f_ref" placeholder="Chi gestiamo la pratica">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+        <div class="field">
+          <label>Telefono <span class="req">*</span></label>
+          <input type="tel" id="f_tel" placeholder="+39 031 000 0000">
+          <span class="err-msg">Inserire telefono valido</span>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="f_email" placeholder="nome@azienda.it">
+          <span class="err-msg">Inserire email valida</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 3 — VEICOLO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div class="section-title">3 — Veicolo</div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Marca <span class="req">*</span></label>
+          <select id="f_marca" onchange="updateModelli()">
+            <option value="">— Seleziona brand —</option>
+            <!-- ITALIANE -->
+            <optgroup label="🇮🇹 Italiane">
+              <option value="Alfa Romeo">Alfa Romeo</option>
+              <option value="Ferrari">Ferrari</option>
+              <option value="Fiat">Fiat</option>
+              <option value="Lancia">Lancia</option>
+              <option value="Lamborghini">Lamborghini</option>
+              <option value="Maserati">Maserati</option>
+            </optgroup>
+            <!-- EUROPEE -->
+            <optgroup label="🇪🇺 Europee">
+              <option value="Audi">Audi</option>
+              <option value="BMW">BMW</option>
+              <option value="Citroën">Citroën</option>
+              <option value="Cupra">Cupra</option>
+              <option value="Dacia">Dacia</option>
+              <option value="DS">DS</option>
+              <option value="Ford Europe">Ford</option>
+              <option value="Opel">Opel</option>
+              <option value="Mercedes-Benz">Mercedes-Benz</option>
+              <option value="Mini">Mini</option>
+              <option value="Peugeot">Peugeot</option>
+              <option value="Porsche">Porsche</option>
+              <option value="Renault">Renault</option>
+              <option value="SEAT">SEAT</option>
+              <option value="Škoda">Škoda</option>
+              <option value="Smart">Smart</option>
+              <option value="Volkswagen">Volkswagen</option>
+              <option value="Volvo">Volvo</option>
+            </optgroup>
+            <!-- AMERICANE -->
+            <optgroup label="🇺🇸 Americane">
+              <option value="Cadillac">Cadillac</option>
+              <option value="Dodge">Dodge</option>
+              <option value="Ford USA">Ford (USA)</option>
+              <option value="Jeep">Jeep</option>
+              <option value="Tesla">Tesla</option>
+            </optgroup>
+            <!-- GIAPPONESI -->
+            <optgroup label="🇯🇵 Giapponesi">
+              <option value="Honda">Honda</option>
+              <option value="Lexus">Lexus</option>
+              <option value="Mazda">Mazda</option>
+              <option value="Mitsubishi">Mitsubishi</option>
+              <option value="Nissan">Nissan</option>
+              <option value="Subaru">Subaru</option>
+              <option value="Suzuki">Suzuki</option>
+              <option value="Toyota">Toyota</option>
+            </optgroup>
+            <!-- COREANE -->
+            <optgroup label="🇰🇷 Coreane">
+              <option value="Genesis">Genesis</option>
+              <option value="Hyundai">Hyundai</option>
+              <option value="Kia">Kia</option>
+            </optgroup>
+            <!-- CINESI -->
+            <optgroup label="🇨🇳 Cinesi / Altre">
+              <option value="BYD">BYD</option>
+              <option value="Lynk & Co">Lynk & Co</option>
+              <option value="MG">MG</option>
+              <option value="Polestar">Polestar</option>
+            </optgroup>
+          </select>
+          <span class="err-msg">Seleziona una marca</span>
+        </div>
+        <div class="field">
+          <label>Modello <span class="req">*</span></label>
+          <input type="text" id="f_modello" placeholder="es. Giulia, Serie 3, Puma…">
+          <span class="err-msg">Campo obbligatorio</span>
+        </div>
+        <div class="field col-full" id="modelli-suggeriti" style="display:none">
+          <label>Modelli comuni — clicca per inserire</label>
+          <div id="modelli-pills" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 4 — CONTRATTO -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="section-title">4 — Contratto</div>
+    </div>
+    <div class="section-body">
+      <!-- DURATA -->
+      <div class="field" style="margin-bottom:24px">
+        <label>Durata Contratto <span class="req">*</span></label>
+        <div class="durata-grid" style="margin-top:8px">
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d24" value="24">
+            <label for="d24"><span class="num">24</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d36" value="36" checked>
+            <label for="d36"><span class="num">36</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d48" value="48">
+            <label for="d48"><span class="num">48</span><span class="unit">Mesi</span></label>
+          </div>
+          <div class="durata-pill">
+            <input type="radio" name="durata" id="d60" value="60">
+            <label for="d60"><span class="num">60</span><span class="unit">Mesi</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- KM TOTALI -->
+      <div class="field" style="margin-bottom:24px">
+        <label>Km Totali <span class="req">*</span></label>
+        <div class="km-wrap" style="margin-top:8px">
+          <div class="km-display" id="kmDisplay">60.000 <span>km</span></div>
+          <input type="range" id="f_km" min="10000" max="200000" step="5000" value="60000" oninput="updateKm()">
+          <div class="km-marks">
+            <span>10.000</span><span>50.000</span><span>100.000</span><span>150.000</span><span>200.000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FRANCHIGIA -->
+      <div class="field">
+        <label>Franchigia <span class="req">*</span></label>
+        <div class="franchigia-grid" style="margin-top:8px">
+          <div class="franch-card">
+            <input type="radio" name="franchigia" id="fNo" value="No" checked>
+            <label for="fNo">
+              <div class="franch-dot"></div>
+              <div class="franch-info">
+                <div class="ftitle">Senza Franchigia</div>
+                <div class="fdesc">Copertura totale senza quota a carico</div>
+              </div>
+            </label>
+          </div>
+          <div class="franch-card">
+            <input type="radio" name="franchigia" id="fSi" value="Sì">
+            <label for="fSi">
+              <div class="franch-dot"></div>
+              <div class="franch-info">
+                <div class="ftitle">Con Franchigia</div>
+                <div class="fdesc">Quota fissa a tuo carico in caso di sinistro</div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 5 — NOTE -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <div class="section-title">5 — Note aggiuntive</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label>Note libere</label>
+        <textarea id="f_note" placeholder="Allestimento specifico, colori preferiti, accessori, richieste particolari…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-wrap">
+    <button type="button" class="btn-submit" id="btnSubmit" onclick="submitForm()">
+      <div class="spinner"></div>
+      <span class="btn-txt">Invia Richiesta</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+    <div class="submit-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      I tuoi dati sono al sicuro e non vengono condivisi con terze parti
+    </div>
+  </div>
+
+  <!-- SUCCESSO -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1aab6d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <h2>Richiesta Inviata</h2>
+    <p>Grazie per aver compilato il modulo. Il nostro team ti contatterà entro <strong>24 ore lavorative</strong> con un preventivo personalizzato.</p>
+    <div class="ticket-badge" id="ticketBadge" style="display:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v10H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      <span id="ticketNum">Ticket #—</span>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
 <script>
-// MAKE.COM WEBHOOK URL — sostituisci con il tuo
-const WORKER_URL = '/.netlify/functions/ticket';
+// ─── CONFIGURAZIONE ──────────────────────────────────────────────
+// ⚠️  Modifica questi due valori prima del deploy
+var FD_DOMAIN   = 'doubledsolution';          // solo il sottodominio, es. "doubledsolution"
+var PROXY_URL   = 'https://incomparable-pixie-3b11e8.netlify.app/api/ticket'; // URL proxy attuale
+// ─────────────────────────────────────────────────────────────────
 
-const CAR_BRANDS = [
-  { id:"abarth",         name:"Abarth",            flag:"🇮🇹", origin:"italiana",   models:["500e Scorpionissima","600e"] },
-  { id:"aiways",         name:"Aiways",             flag:"🇨🇳", origin:"cinese",     models:["U5","U6"] },
-  { id:"alfa-romeo",     name:"Alfa Romeo",         flag:"🇮🇹", origin:"italiana",   models:["Junior","Giulia","Stelvio","Tonale","33 Stradale"] },
-  { id:"alpine",         name:"Alpine",             flag:"🇫🇷", origin:"europea",    models:["A110","A290"] },
-  { id:"aston-martin",   name:"Aston Martin",       flag:"🇬🇧", origin:"europea",    models:["Vantage","DB12","DBS","DBX","DBX707"] },
-  { id:"audi",           name:"Audi",               flag:"🇩🇪", origin:"europea",    models:["A3","A4","A5","A6","A7","A8","Q2","Q3","Q5","Q5 Sportback","Q7","Q8","Q4 e-tron","Q6 e-tron","e-tron GT","RS3","RS6"] },
-  { id:"bentley",        name:"Bentley",            flag:"🇬🇧", origin:"europea",    models:["Continental GT","Continental GTC","Flying Spur","Bentayga","Bacalar"] },
-  { id:"bmw",            name:"BMW",                flag:"🇩🇪", origin:"europea",    models:["Serie 1","Serie 2","Serie 3","Serie 4","Serie 5","Serie 7","X1","X2","X3","X4","X5","X6","X7","i4","i5","i7","iX","iX1","M3","M5","M8"] },
-  { id:"byd",            name:"BYD",                flag:"🇨🇳", origin:"cinese",     models:["Dolphin","Seagull","Atto 2","Atto 3","Atto 5","Seal","Seal U","Seal U DM-i","Seal 06","Seal 6","Seal 6 Touring","Han","Tang"] },
-  { id:"cadillac",       name:"Cadillac",           flag:"🇺🇸", origin:"americana",  models:["Escalade","CT4","CT5","Lyriq"] },
-  { id:"chevrolet",      name:"Chevrolet",          flag:"🇺🇸", origin:"americana",  models:["Trax","Equinox","Blazer EV","Corvette"] },
-  { id:"citroen",        name:"Citroën",            flag:"🇫🇷", origin:"europea",    models:["C3","ë-C3","C3 Aircross","ë-C3 Aircross","C5 Aircross","Berlingo","SpaceTourer"] },
-  { id:"cupra",          name:"Cupra",              flag:"🇪🇸", origin:"europea",    models:["Born","Formentor","Leon","Ateca","Terramar","Tavascan"] },
-  { id:"dacia",          name:"Dacia",              flag:"🇷🇴", origin:"europea",    models:["Sandero","Sandero Stepway","Duster","Jogger","Spring","Bigster","C-Neo","Hipster"] },
-  { id:"deepal",         name:"Deepal (Changan)",   flag:"🇨🇳", origin:"cinese",     models:["S05","S07"] },
-  { id:"dodge",          name:"Dodge",              flag:"🇺🇸", origin:"americana",  models:["Durango","Challenger","Charger"] },
-  { id:"dongfeng",       name:"Dongfeng",           flag:"🇨🇳", origin:"cinese",     models:["Box","Nammi 01","EC07"] },
-  { id:"dr-automobiles", name:"DR Automobiles",     flag:"🇮🇹", origin:"italiana",   models:["DR 4.0","DR 5.0","DR 6.0"] },
-  { id:"ds-automobiles", name:"DS Automobiles",     flag:"🇫🇷", origin:"europea",    models:["DS 3","DS 3 E-Tense","DS 4","DS 4 E-Tense","DS 7","DS 7 E-Tense","DS N°3","DS N°4","DS N°7"] },
-  { id:"evo",            name:"EVO",               flag:"🇮🇹", origin:"italiana",   models:["EVO 3","EVO 5","EVO 6","EVO 7"] },
-  { id:"ferrari",        name:"Ferrari",            flag:"🇮🇹", origin:"italiana",   models:["296 GTB","296 GTS","SF90 Stradale","Roma","Portofino M","Purosangue","12Cilindri","F80"] },
-  { id:"fiat",           name:"Fiat",               flag:"🇮🇹", origin:"italiana",   models:["Panda","Grande Panda","500","500e","Tipo","600","600e"] },
-  { id:"firefly",        name:"Firefly (NIO)",      flag:"🇨🇳", origin:"cinese",     models:["Firefly EV"] },
-  { id:"ford",           name:"Ford",               flag:"🇺🇸", origin:"americana",  models:["Puma","Kuga","Explorer","Mustang","Mustang Mach-E","Bronco","Explorer EV","Transit"] },
-  { id:"forthing",       name:"Forthing",           flag:"🇨🇳", origin:"cinese",     models:["Friday","U-Tour"] },
-  { id:"gac-aion",       name:"GAC Aion",           flag:"🇨🇳", origin:"cinese",     models:["Aion Y Plus","Aion V","Aion LX Plus"] },
-  { id:"genesis",        name:"Genesis",            flag:"🇰🇷", origin:"coreana",    models:["G80","Electrified G80","GV70","GV80","GV60"] },
-  { id:"honda",          name:"Honda",              flag:"🇯🇵", origin:"giapponese", models:["Jazz","Civic","Accord","HR-V","ZR-V","CR-V","e:Ny1","e:N1"] },
-  { id:"hyundai",        name:"Hyundai",            flag:"🇰🇷", origin:"coreana",    models:["i10","i20","i30","i30 Wagon","Kona","Kona Electric","Tucson","Santa Fe","Ioniq 5","Ioniq 6","Ioniq 9","Nexo"] },
-  { id:"ickx",           name:"ICKX",              flag:"🇮🇹", origin:"italiana",   models:["E5","E6"] },
-  { id:"ineos",          name:"Ineos",              flag:"🇬🇧", origin:"europea",    models:["Grenadier","Grenadier Quartermaster"] },
-  { id:"isuzu",          name:"Isuzu",              flag:"🇯🇵", origin:"giapponese", models:["D-Max","D-Max N60","MU-X"] },
-  { id:"jaecoo",         name:"Jaecoo (Chery)",     flag:"🇨🇳", origin:"cinese",     models:["Jaecoo 5","Jaecoo 7","Jaecoo 8"] },
-  { id:"jaguar",         name:"Jaguar",             flag:"🇬🇧", origin:"europea",    models:["F-Pace","E-Pace","I-Pace","F-Type","XE","XF"] },
-  { id:"jeep",           name:"Jeep",               flag:"🇺🇸", origin:"americana",  models:["Avenger","Renegade","Compass","Cherokee","Wrangler","Grand Cherokee","Gladiator"] },
-  { id:"kia",            name:"Kia",                flag:"🇰🇷", origin:"coreana",    models:["Picanto","Rio","Ceed","Ceed Sportswagon","Stonic","Niro","Niro EV","Sportage","Sorento","EV3","EV4","EV6","EV9"] },
-  { id:"lamborghini",    name:"Lamborghini",        flag:"🇮🇹", origin:"italiana",   models:["Huracán","Urus","Revuelto","Lanzador"] },
-  { id:"lancia",         name:"Lancia",             flag:"🇮🇹", origin:"italiana",   models:["Ypsilon","Delta","Gamma"] },
-  { id:"land-rover",     name:"Land Rover",         flag:"🇬🇧", origin:"europea",    models:["Defender 90","Defender 110","Discovery","Discovery Sport","Range Rover","Range Rover Sport","Range Rover Velar","Range Rover Evoque"] },
-  { id:"leapmotor",      name:"Leapmotor",          flag:"🇨🇳", origin:"cinese",     models:["T03","C10","B10"] },
-  { id:"lexus",          name:"Lexus",              flag:"🇯🇵", origin:"giapponese", models:["UX","UX 300e","NX","NX 350h","RX","LX","GX","ES","LS","RC","LC","RZ"] },
-  { id:"lotus",          name:"Lotus",              flag:"🇬🇧", origin:"europea",    models:["Emira","Eletre","Emeya"] },
-  { id:"lynk-co",        name:"Lynk & Co",          flag:"🇸🇪", origin:"europea",    models:["01","02","05"] },
-  { id:"maserati",       name:"Maserati",           flag:"🇮🇹", origin:"italiana",   models:["Ghibli","Levante","Quattroporte","GranTurismo","GranCabrio","Grecale","MC20"] },
-  { id:"maxus",          name:"Maxus",              flag:"🇨🇳", origin:"cinese",     models:["T90 EV","eDeliver 3","eDeliver 9","MIFA 9","Mifa 7"] },
-  { id:"mazda",          name:"Mazda",              flag:"🇯🇵", origin:"giapponese", models:["2","3","3 Fastback","CX-3","CX-30","CX-5","CX-60","CX-80","MX-5","MX-30","6e"] },
-  { id:"mclaren",        name:"McLaren",            flag:"🇬🇧", origin:"europea",    models:["Artura","720S","765LT","GT","Elva"] },
-  { id:"mercedes-benz",  name:"Mercedes-Benz",      flag:"🇩🇪", origin:"europea",    models:["Classe A","Classe B","Classe C","Classe E","Classe S","GLA","GLB","GLC","GLE","GLS","CLA","CLS","EQA","EQB","EQC","EQE","EQS","AMG GT","G-Klasse"] },
-  { id:"mg",             name:"MG",                 flag:"🇨🇳", origin:"cinese",     models:["MG3","MG4 Electric","MG5","MG ZS","MG ZS EV","MG HS","MG EHS","Marvel R","Cyberster","ES5"] },
-  { id:"mini",           name:"MINI",               flag:"🇬🇧", origin:"europea",    models:["Cooper","Cooper Convertible","Clubman","Countryman","Aceman","Cooper E","Countryman E"] },
-  { id:"mitsubishi",     name:"Mitsubishi",         flag:"🇯🇵", origin:"giapponese", models:["ASX","Eclipse Cross","Outlander","Outlander PHEV"] },
-  { id:"nio",            name:"NIO",                flag:"🇨🇳", origin:"cinese",     models:["ET5","ET5 Touring","ET7","EL6","EL7","EL8"] },
-  { id:"nissan",         name:"Nissan",             flag:"🇯🇵", origin:"giapponese", models:["Juke","Qashqai","X-Trail","Leaf","Ariya","Micra","GT-R","Navara"] },
-  { id:"omoda",          name:"Omoda (Chery)",      flag:"🇨🇳", origin:"cinese",     models:["Omoda 3","Omoda 5","Omoda 7","Omoda 8","Omoda 9"] },
-  { id:"opel",           name:"Opel",               flag:"🇩🇪", origin:"europea",    models:["Corsa","Corsa Electric","Astra","Astra Sports Tourer","Mokka","Mokka-e","Grandland","Frontera","Zafira"] },
-  { id:"ora",            name:"ORA (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Funky Cat","ORA 03"] },
-  { id:"peugeot",        name:"Peugeot",            flag:"🇫🇷", origin:"europea",    models:["208","308","408","508","2008","3008","5008","E-208","E-308","E-2008","E-408","E-3008","E-5008"] },
-  { id:"polestar",       name:"Polestar",           flag:"🇸🇪", origin:"europea",    models:["Polestar 2","Polestar 3","Polestar 4","Polestar 5"] },
-  { id:"porsche",        name:"Porsche",            flag:"🇩🇪", origin:"europea",    models:["911","718 Cayman","718 Boxster","Macan","Macan EV","Cayenne","Panamera","Taycan","Taycan Cross Turismo"] },
-  { id:"renault",        name:"Renault",            flag:"🇫🇷", origin:"europea",    models:["Clio","Megane","Austral","Espace","Arkana","Zoe","Megane E-Tech","R5 E-Tech","R4 E-Tech","Scenic E-Tech"] },
-  { id:"rolls-royce",    name:"Rolls-Royce",        flag:"🇬🇧", origin:"europea",    models:["Phantom","Ghost","Wraith","Dawn","Cullinan","Spectre"] },
-  { id:"seat",           name:"Seat",               flag:"🇪🇸", origin:"europea",    models:["Ibiza","Leon","Leon Sportstourer","Arona","Ateca","Tarraco"] },
-  { id:"seres",          name:"Seres",              flag:"🇨🇳", origin:"cinese",     models:["SF5","M7","M9"] },
-  { id:"sportequipe",    name:"Sportequipe",       flag:"🇮🇹", origin:"italiana",   models:["Sportequipe 5","Sportequipe 6"] },
-  { id:"skoda",          name:"Škoda",              flag:"🇨🇿", origin:"europea",    models:["Fabia","Octavia","Octavia Combi","Superb","Scala","Kamiq","Karoq","Kodiaq","Elroq","Enyaq","Epiq"] },
-  { id:"skywell",        name:"Skywell",            flag:"🇨🇳", origin:"cinese",     models:["BT-H6"] },
-  { id:"smart",          name:"Smart",              flag:"🇩🇪", origin:"europea",    models:["#1","#3","#5"] },
-  { id:"subaru",         name:"Subaru",             flag:"🇯🇵", origin:"giapponese", models:["Impreza","Outback","Forester","XV","BRZ","Solterra","Uncharted"] },
-  { id:"suzuki",         name:"Suzuki",             flag:"🇯🇵", origin:"giapponese", models:["Swift","Swift Sport","Vitara","S-Cross","Ignis","Jimny","eVitara"] },
-  { id:"swm",            name:"SWM",                flag:"🇨🇳", origin:"cinese",     models:["G01","G05","G09"] },
-  { id:"tesla",          name:"Tesla",              flag:"🇺🇸", origin:"americana",  models:["Model 3","Model Y","Model X","Model S","Cybertruck","Cybercab"] },
-  { id:"toyota",         name:"Toyota",             flag:"🇯🇵", origin:"giapponese", models:["Yaris","Yaris Cross","Corolla","Corolla Cross","Camry","C-HR","RAV4","Highlander","Land Cruiser","GR86","GR Yaris","bZ4X","Proace City"] },
-  { id:"volkswagen",     name:"Volkswagen",         flag:"🇩🇪", origin:"europea",    models:["Polo","Golf","Golf Variant","Passat","Arteon","T-Cross","T-Roc","Tiguan","Touareg","ID.3","ID.4","ID.5","ID.7","ID.Polo","ID.Cross"] },
-  { id:"volvo",          name:"Volvo",              flag:"🇸🇪", origin:"europea",    models:["XC40","XC60","XC90","V60","V60 Cross Country","V90","S60","S90","EX30","EX40","EX60","EX90","ES90"] },
-  { id:"wey",            name:"Wey (GWM)",          flag:"🇨🇳", origin:"cinese",     models:["Coffee 01 PHEV","Coffee 02"] },
-  { id:"xpeng",          name:"Xpeng",              flag:"🇨🇳", origin:"cinese",     models:["G6","G9"] },
-  { id:"zeekr",          name:"Zeekr (Geely)",      flag:"🇨🇳", origin:"cinese",     models:["001","007","009","X","EX5","Starray"] },
-];
+// Modelli suggeriti per brand
+var MODELLI = {
+  'Alfa Romeo':    ['Giulia','Stelvio','Tonale','Giulietta'],
+  'Fiat':          ['500','Panda','Tipo','500X','500L','Doblò','Fiorino'],
+  'Lancia':        ['Ypsilon','Delta'],
+  'BMW':           ['Serie 1','Serie 2','Serie 3','Serie 4','Serie 5','X1','X3','X5','iX1','i4','i5'],
+  'Mercedes-Benz': ['Classe A','Classe B','Classe C','Classe E','GLA','GLC','GLB','EQA','EQB','EQC','Sprinter','Vito'],
+  'Volkswagen':    ['Polo','Golf','Tiguan','T-Cross','T-Roc','Touareg','Passat','ID.3','ID.4','ID.7'],
+  'Audi':          ['A1','A3','A4','A6','Q2','Q3','Q5','Q8','e-tron','Q4 e-tron'],
+  'Peugeot':       ['208','308','408','3008','5008','e-208','e-308','e-3008'],
+  'Renault':       ['Clio','Megane','Captur','Austral','Arkana','Zoe','Megane E-Tech'],
+  'Toyota':        ['Aygo X','Yaris','Corolla','C-HR','RAV4','Yaris Cross','bZ4X'],
+  'Hyundai':       ['i10','i20','i30','Tucson','Kona','Santa Fe','IONIQ 5','IONIQ 6'],
+  'Kia':           ['Picanto','Stonic','Ceed','Sportage','Sorento','Niro','EV6','EV9'],
+  'Ford Europe':   ['Fiesta','Focus','Puma','Kuga','Explorer','Mustang Mach-E'],
+  'Opel':          ['Corsa','Astra','Mokka','Crossland','Grandland','Combo'],
+  'Škoda':         ['Fabia','Octavia','Karoq','Kodiaq','Scala','Enyaq'],
+  'Dacia':         ['Sandero','Duster','Jogger','Spring','Lodgy'],
+  'Jeep':          ['Renegade','Compass','Avenger','Wrangler','Grand Cherokee'],
+  'Tesla':         ['Model 3','Model Y','Model S','Model X','Cybertruck'],
+  'BYD':           ['SEAL','ATTO 3','Dolphin','ATTO 2','HAN'],
+  'Volvo':         ['XC40','XC60','XC90','C40 Recharge','EX30','EX40'],
+};
 
-window.NLT=(function(){
-  'use strict';
-  function initMarca(){
-    var s=document.getElementById('nmarca');
-    var o=document.createElement('option');o.value='';o.textContent='-- Seleziona marca --';s.appendChild(o);
-    for(var i=0;i<CAR_BRANDS.length;i++){var op=document.createElement('option');op.value=CAR_BRANDS[i].name;op.textContent=CAR_BRANDS[i].name;s.appendChild(op);}
-    s.addEventListener('change',function(){clr('ff-marca');prog();});
-  }
-  function tipo(v){
-    document.getElementById('ntipo').value=v;
-    document.getElementById('paz').classList.toggle('on',v==='Azienda');
-    document.getElementById('ppr').classList.toggle('on',v==='Privato');
-    var ln=document.getElementById('lnome'),lp=document.getElementById('lpiva');
-    var in_=document.getElementById('nnome'),ip=document.getElementById('npiva');
-    if(v==='Privato'){ln.innerHTML='Nome e Cognome <span class="req">*</span>';lp.innerHTML='Codice Fiscale <span class="req">*</span>';in_.placeholder='Nome e Cognome';ip.placeholder='RSSMRA80A01H501U';ip.maxLength=16;}
-    else{ln.innerHTML='Nome Azienda <span class="req">*</span>';lp.innerHTML='Partita IVA <span class="req">*</span>';in_.placeholder='Ragione sociale';ip.placeholder='IT12345678901';ip.maxLength=13;}
-    prog();
-  }
-  function durata(v,btn){
-    document.getElementById('ndurata').value=v;
-    btn.closest('.pills').querySelectorAll('.pill').forEach(function(p){p.classList.remove('on');});
-    btn.classList.add('on');
-  }
-  function km(v){
-    var n=parseInt(v);
-    document.getElementById('nkmv').textContent=n.toLocaleString('it-IT');
-    document.getElementById('nkm').value=v;
-    document.getElementById('nkms').style.setProperty('--pct',((n-10000)/190000*100).toFixed(1)+'%');
-  }
-  function fr(v){
-    document.getElementById('nfr').value=v;
-    document.getElementById('frno').classList.toggle('on',v==='No');
-    document.getElementById('frsi').classList.toggle('on',v==='Si');
-  }
-  var RQ=['nnome','npiva','nref','ntel','nemail','nmarca','nmodello'];
-  function prog(){
-    var f=3,t=RQ.length+3;
-    RQ.forEach(function(id){var el=document.getElementById(id);if(el&&el.value.trim())f++;});
-    var p=Math.round(f/t*100);
-    document.getElementById('nf').style.width=p+'%';
-    document.getElementById('np').textContent=p+'%';
-  }
-  function clr(id){var el=document.getElementById(id);if(el)el.classList.remove('bad');}
-  function validate(){
-    var ok=true;
-    function e(id,show){var el=document.getElementById(id);if(el)el.classList.toggle('bad',show);if(show)ok=false;}
-    e('ff-nome',!document.getElementById('nnome').value.trim());
-    e('ff-piva',!document.getElementById('npiva').value.trim());
-    e('ff-ref',!document.getElementById('nref').value.trim());
-    e('ff-tel',!/^[\+\d\s\-\(\)]{7,}$/.test(document.getElementById('ntel').value.trim()));
-    e('ff-email',!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('nemail').value.trim()));
-    e('ff-marca',!document.getElementById('nmarca').value);
-    e('ff-modello',!document.getElementById('nmodello').value.trim());
-    return ok;
-  }
-  function desc(d){
-    var r='Richiesta Noleggio a Lungo Termine\n\n';
-    r+='Tipo: '+d.tipo+'\n';
-    r+=(d.tipo==='Privato'?'Nome e Cognome: ':'Nome Azienda: ')+d.nome+'\n';
-    r+=(d.tipo==='Privato'?'Codice Fiscale: ':'Partita IVA: ')+d.piva+'\n';
-    r+='Referente: '+d.ref+'\n';
-    r+='Telefono: '+d.tel+'\n';
-    r+='Email: '+d.email+'\n';
-    r+='Marca: '+d.marca+'\n';
-    r+='Modello: '+d.modello+'\n';
-    r+='Durata: '+d.durata+' mesi\n';
-    r+='Km Totali: '+parseInt(d.km).toLocaleString('it-IT')+' km\n';
-    r+='Franchigia: '+d.fr+'\n';
-    if(d.note) r+='Note: '+d.note+'\n';
-    return r;
-  }
-  function toast(msg,t){var el=document.getElementById('nlt-toast');el.textContent=msg;el.className='show '+(t||'ok');setTimeout(function(){el.className='';},5000);}
-  function submit(ev){
-    ev.preventDefault();
-    if(!validate()){var f=document.querySelector('#nlt-root .bad input,#nlt-root .bad select');if(f)f.scrollIntoView({behavior:'smooth',block:'center'});return;}
-    var btn=document.getElementById('nbtn');
-    btn.classList.add('loading');btn.disabled=true;
-    var d={
-      tipo:document.getElementById('ntipo').value,
-      nome:document.getElementById('nnome').value.trim(),
-      piva:document.getElementById('npiva').value.trim(),
-      ref:document.getElementById('nref').value.trim(),
-      tel:document.getElementById('ntel').value.trim(),
-      email:document.getElementById('nemail').value.trim(),
-      marca:document.getElementById('nmarca').value,
-      modello:document.getElementById('nmodello').value.trim(),
-      durata:document.getElementById('ndurata').value,
-      km:document.getElementById('nkm').value,
-      fr:document.getElementById('nfr').value,
-      note:document.getElementById('nnote').value.trim()
-    };
-    var payload={
-      tipo:    d.tipo,
-      nome:    d.nome,
-      piva:    d.piva,
-      ref:     d.ref,
-      tel:     d.tel,
-      email:   d.email,
-      marca:   d.marca,
-      modello: d.modello,
-      durata:  d.durata,
-      km:      parseInt(d.km).toLocaleString('it-IT'),
-      fr:      d.fr,
-      note:    d.note || ''
-    };
-    // Invia a Netlify Forms
-    var formData = new FormData();
-    formData.append('form-name', 'nlt-richiesta');
-    formData.append('tipo',    d.tipo);
-    formData.append('nome',    d.nome);
-    formData.append('piva',    d.piva);
-    formData.append('ref',     d.ref);
-    formData.append('tel',     d.tel);
-    formData.append('email',   d.email);
-    formData.append('marca',   d.marca);
-    formData.append('modello', d.modello);
-    formData.append('durata',  d.durata + ' mesi');
-    formData.append('km',      d.km + ' km');
-    formData.append('franchigia', d.fr);
-    formData.append('note',    d.note || '');
+// ─── TIPO INTESTATARIO ───────────────────────────
+function setTipo(val, btn) {
+  document.getElementById('f_tipo').value = val;
+  document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  var isPrivato = val === 'Privato';
+  toggle('wrapNomeAzienda', !isPrivato);
+  toggle('wrapNomePrivato', isPrivato);
+  toggle('wrapPiva', !isPrivato);
+  toggle('wrapCf', isPrivato);
+  updateProgress();
+}
 
-    fetch('/', { method:'POST', body: formData })
-    .then(function(r){
-      btn.classList.remove('loading');btn.disabled=false;
-      if(r.ok){
-        document.getElementById('nf').style.width='100%';
-        document.getElementById('np').textContent='100%';
-        document.getElementById('nb').innerHTML=
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:64px 32px;text-align:center">'+
-          '<div style="width:60px;height:60px;border-radius:50%;background:rgba(39,174,96,.1);display:flex;align-items:center;justify-content:center">'+
-          '<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
-          '<div style="font-family:Cormorant Garamond,serif;font-size:34px;font-weight:300;color:#0d1e90">Richiesta Inviata</div>'+
-          '<div style="font-size:14px;color:#3a4e8c;max-width:360px;line-height:1.7">Il team DoubleDsolution contatterà <strong>'+d.ref+'</strong> entro 24 ore lavorative.</div>'+
-          '</div>';
-      } else {
-        toast('❌ Errore '+r.status+' — riprova o contattaci','err');
+function toggle(id, show) {
+  document.getElementById(id).style.display = show ? '' : 'none';
+}
+
+// ─── MODELLI SUGGERITI ───────────────────────────
+function updateModelli() {
+  var marca = document.getElementById('f_marca').value;
+  var wrap  = document.getElementById('modelli-suggeriti');
+  var pills = document.getElementById('modelli-pills');
+  if (MODELLI[marca]) {
+    pills.innerHTML = '';
+    MODELLI[marca].forEach(function(m) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = m;
+      b.style.cssText = 'padding:6px 14px;border:1.5px solid var(--ash);border-radius:20px;background:transparent;font-family:inherit;font-size:12.5px;color:var(--mist);cursor:pointer;transition:all .18s';
+      b.onmouseenter = function() { this.style.background='var(--steel)'; this.style.color='#fff'; this.style.borderColor='var(--steel)'; };
+      b.onmouseleave = function() { this.style.background='transparent'; this.style.color='var(--mist)'; this.style.borderColor='var(--ash)'; };
+      b.onclick = function() { document.getElementById('f_modello').value = m; updateProgress(); };
+      pills.appendChild(b);
+    });
+    wrap.style.display = '';
+  } else {
+    wrap.style.display = 'none';
+  }
+  updateProgress();
+}
+
+// ─── KM SLIDER ───────────────────────────────────
+function updateKm() {
+  var v = parseInt(document.getElementById('f_km').value);
+  document.getElementById('kmDisplay').innerHTML = v.toLocaleString('it-IT') + ' <span>km</span>';
+  updateProgress();
+}
+
+// ─── PROGRESS ────────────────────────────────────
+function updateProgress() {
+  var tipo = document.getElementById('f_tipo').value;
+  var fields = [
+    tipo === 'Privato' ? document.getElementById('f_nome_privato') : document.getElementById('f_nome_azienda'),
+    tipo === 'Privato' ? document.getElementById('f_cf') : document.getElementById('f_piva'),
+    document.getElementById('f_ref'),
+    document.getElementById('f_tel'),
+    document.getElementById('f_email'),
+    document.getElementById('f_marca'),
+    document.getElementById('f_modello'),
+  ];
+  var filled = fields.filter(function(f){ return f && f.value.trim() !== ''; }).length;
+  var pct = Math.round((filled / fields.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+// ─── VALIDAZIONE ─────────────────────────────────
+function setErr(id, hasErr) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.closest('.field').classList.toggle('has-error', hasErr);
+}
+function clearErr(id) { setErr(id, false); }
+
+function validate() {
+  var ok = true;
+  var tipo = document.getElementById('f_tipo').value;
+
+  if (tipo === 'Azienda') {
+    var na = document.getElementById('f_nome_azienda').value.trim();
+    if (!na) { setErr('f_nome_azienda', true); ok = false; } else clearErr('f_nome_azienda');
+    var piva = document.getElementById('f_piva').value.trim();
+    if (piva.length < 5) { setErr('f_piva', true); ok = false; } else clearErr('f_piva');
+  } else {
+    var np = document.getElementById('f_nome_privato').value.trim();
+    if (!np) { setErr('f_nome_privato', true); ok = false; } else clearErr('f_nome_privato');
+    var cf = document.getElementById('f_cf').value.trim();
+    if (cf.length < 11) { setErr('f_cf', true); ok = false; } else clearErr('f_cf');
+  }
+
+  var ref = document.getElementById('f_ref').value.trim();
+  if (!ref) { setErr('f_ref', true); ok = false; } else clearErr('f_ref');
+
+  var tel = document.getElementById('f_tel').value.trim();
+  if (tel.length < 6) { setErr('f_tel', true); ok = false; } else clearErr('f_tel');
+
+  var email = document.getElementById('f_email').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setErr('f_email', true); ok = false; } else clearErr('f_email');
+
+  var marca = document.getElementById('f_marca').value;
+  if (!marca) { setErr('f_marca', true); ok = false; } else clearErr('f_marca');
+
+  var mod = document.getElementById('f_modello').value.trim();
+  if (!mod) { setErr('f_modello', true); ok = false; } else clearErr('f_modello');
+
+  return ok;
+}
+
+// ─── TOAST ───────────────────────────────────────
+function showToast(msg, type) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3800);
+}
+
+// ─── BUILD DESCRIZIONE HTML TICKET ───────────────
+function buildDesc(d) {
+  var rows = [
+    ['Tipo Intestatario', d.tipo],
+    ['Azienda / Nome',    d.nome],
+    [d.tipo === 'Privato' ? 'Codice Fiscale' : 'Partita IVA', d.piva_cf],
+    ['Referente',         d.ref],
+    ['Telefono',          d.tel],
+    ['Email',             d.email],
+    ['Marca',             d.marca],
+    ['Modello',           d.modello],
+    ['Durata',            d.durata + ' mesi'],
+    ['Km Totali',         parseInt(d.km).toLocaleString('it-IT') + ' km'],
+    ['Franchigia',        d.franchigia],
+    ['Note',              d.note || '—'],
+  ];
+  var html = '<h2 style="color:#0a0f2e;font-family:sans-serif">Richiesta NLT</h2><table style="width:100%;border-collapse:collapse;font-family:sans-serif;font-size:14px">';
+  rows.forEach(function(r) {
+    html += '<tr><td style="padding:8px 12px;background:#f0f4ff;color:#4a5a8a;font-weight:500;width:38%;border:1px solid #d5e1fa">' + r[0] + '</td><td style="padding:8px 12px;border:1px solid #d5e1fa;color:#0a0f2e">' + r[1] + '</td></tr>';
+  });
+  html += '</table>';
+  return html;
+}
+
+// ─── SUBMIT ──────────────────────────────────────
+function submitForm() {
+  if (!validate()) {
+    showToast('⚠️ Compila tutti i campi obbligatori', 'err');
+    var firstErr = document.querySelector('.has-error input, .has-error select, .has-error textarea');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  var tipo  = document.getElementById('f_tipo').value;
+  var nome  = tipo === 'Privato'
+    ? document.getElementById('f_nome_privato').value.trim()
+    : document.getElementById('f_nome_azienda').value.trim();
+  var pivaOcf = tipo === 'Privato'
+    ? document.getElementById('f_cf').value.trim()
+    : document.getElementById('f_piva').value.trim();
+  var ref       = document.getElementById('f_ref').value.trim();
+  var tel       = document.getElementById('f_tel').value.trim();
+  var email     = document.getElementById('f_email').value.trim();
+  var marca     = document.getElementById('f_marca').value;
+  var modello   = document.getElementById('f_modello').value.trim();
+  var durata    = document.querySelector('input[name=durata]:checked').value;
+  var km        = document.getElementById('f_km').value;
+  var franchigia = document.querySelector('input[name=franchigia]:checked').value;
+  var note      = document.getElementById('f_note').value.trim();
+
+  var d = { tipo: tipo, nome: nome, piva_cf: pivaOcf, ref: ref, tel: tel, email: email,
+            marca: marca, modello: modello, durata: durata, km: km,
+            franchigia: franchigia, note: note };
+
+  var payload = {
+    subject:     'NLT — ' + marca + ' ' + modello + ' (' + durata + ' mesi) — ' + nome,
+    description: buildDesc(d),
+    email:       email,
+    name:        ref,
+    phone:       tel,
+    priority:    2,
+    tags:        ['nlt', 'noleggio-lungo-termine'],
+    custom_fields: {
+      cf_tipo_intestatario: tipo,
+      cf_piva_cf:           pivaOcf,
+      cf_marca:             marca,
+      cf_modello:           modello,
+      cf_durata_mesi:       parseInt(durata),
+      cf_km_totali:         parseInt(km),
+      cf_franchigia:        franchigia === 'Sì'
+    }
+  };
+
+  var btn = document.getElementById('btnSubmit');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  fetch(PROXY_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json().then(function(data){ return { status: r.status, data: data }; }); })
+  .then(function(res) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    if (res.status === 200 || res.status === 201 || res.data.ok || res.data.id) {
+      // Successo
+      document.getElementById('formContainer').style.display = 'none';
+      document.getElementById('successScreen').classList.add('visible');
+      // Aggiorna progress 100%
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('progressPct').textContent = '100%';
+      // Mostra numero ticket se disponibile
+      var ticketId = res.data.id || (res.data.ticket && res.data.ticket.id);
+      if (ticketId) {
+        document.getElementById('ticketNum').textContent = 'Ticket #' + ticketId;
+        document.getElementById('ticketBadge').style.display = 'inline-flex';
       }
-    })
-    .catch(function(err){
-      btn.classList.remove('loading');btn.disabled=false;
-      toast('❌ '+(err.message||'Errore di rete — riprova'),'err');
-    });
-  }
-  function init(){
-    initMarca();km(40000);
-    document.getElementById('nlt-form').addEventListener('submit',submit);
-    RQ.forEach(function(id){
-      var el=document.getElementById(id);if(!el)return;
-      el.addEventListener('input',prog);el.addEventListener('change',prog);
-      el.addEventListener('input',function(){clr('ff-'+id.replace(/^n/,''));});
-    });
-  }
-  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();
-  return{tipo:tipo,durata:durata,km:km,fr:fr};
-})();
+      showToast('✅ Richiesta inviata con successo!', 'ok');
+    } else {
+      var errMsg = res.data.error || res.data.description || 'Errore invio. Riprova tra qualche istante.';
+      showToast('❌ ' + errMsg, 'err');
+    }
+  })
+  .catch(function(err) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    console.error('[NLT] Errore fetch:', err);
+    showToast('❌ Connessione al server fallita. Riprova.', 'err');
+  });
+}
+
+// ─── CLEAR ERRORS ON INPUT ───────────────────────
+document.querySelectorAll('input, select, textarea').forEach(function(el) {
+  el.addEventListener('input', function() {
+    var f = el.closest('.field');
+    if (f) f.classList.remove('has-error');
+    updateProgress();
+  });
+});
+
+// Init
+updateProgress();
+updateKm();
 </script>
 </body>
 </html>
