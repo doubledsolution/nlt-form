@@ -1,112 +1,104 @@
-const https = require('https');
-
-exports.handler = async (event) => {
+exports.handler = async function(event) {
   const H = {
-    'Access-Control-Allow-Origin' : '*',
+    'Access-Control-Allow-Origin':  '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
 
   if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: H, body: '' };
-
-  // Versione identificabile
-  const VERSION = 'v4-test-2026-05-30';
-
-  let b = {};
-  try { b = JSON.parse(event.body || '{}'); } catch(e) {}
+  if (event.httpMethod !== 'POST')   return { statusCode: 405, headers: H, body: JSON.stringify({ ok: false, error: 'Method not allowed' }) };
 
   const apiKey = process.env.FD_API_KEY;
-
-  // Se non c'è email, ritorna eco di quello che ha ricevuto
-  const email = (b.email || '').trim();
-  if (!email) {
-    return {
-      statusCode: 422, headers: H,
-      body: JSON.stringify({
-        ok: false,
-        version: VERSION,
-        error: 'Email mancante',
-        received: b,
-        has_api_key: !!apiKey
-      })
-    };
-  }
+  const domain = process.env.FD_DOMAIN || 'doubledsolution';
 
   if (!apiKey) {
-    return {
-      statusCode: 500, headers: H,
-      body: JSON.stringify({ ok: false, version: VERSION, error: 'FD_API_KEY mancante su Netlify' })
-    };
+    return { statusCode: 500, headers: H, body: JSON.stringify({ ok: false, error: 'FD_API_KEY non configurata' }) };
   }
 
-  // Chiama Freshdesk
-  const rr = (l,v) => v ? `<tr><td style="padding:3px 10px 3px 0;color:#555;font-size:13px"><b>${l}</b></td><td style="font-size:13px">${v}</td></tr>` : '';
-  const nome    = (b.nome || 'N/D').trim();
+  let b = {};
+  try { b = JSON.parse(event.body || '{}'); } catch(e) {
+    return { statusCode: 400, headers: H, body: JSON.stringify({ ok: false, error: 'JSON non valido' }) };
+  }
+
+  const email = (b.email || '').trim();
+  if (!email) return { statusCode: 422, headers: H, body: JSON.stringify({ ok: false, error: 'Email obbligatoria' }) };
+
+  // Costruisce descrizione HTML
+  const rr = (l, v) => v ? `<tr><td style="padding:4px 12px 4px 0;color:#555;font-weight:600;font-size:13px;white-space:nowrap">${l}</td><td style="font-size:13px;color:#0a0f2e">${v}</td></tr>` : '';
+  const nome    = (b.name || b.nome || 'N/D').trim();
   const marca   = (b.marca || 'N/D').trim();
   const modello = (b.modello || 'N/D').trim();
-  const ref     = (b.ref || b.referente || nome).trim();
+  const durata  = b.durata || '?';
+  const km      = b.km ? Number(b.km).toLocaleString('it-IT') + ' km' : 'N/D';
+  const fr      = b.franchigia !== undefined ? (b.franchigia === true || b.franchigia === 'Sì' ? 'Sì' : 'No') : (b.fr || 'N/D');
 
-  const desc = `<h3 style="color:#0d1e90">Richiesta NLT</h3><table>
-    ${rr('Tipo',b.tipo)}${rr('Azienda/Nome',nome)}${rr('P.IVA',b.piva)}
-    ${rr('Referente',ref)}${rr('Tel',b.tel)}${rr('Email',email)}
-    <tr><td colspan="2"><hr style="border:none;border-top:1px solid #ddd;margin:6px 0"></td></tr>
-    ${rr('Marca',marca)}${rr('Modello',modello)}
-    ${rr('Durata',b.durata?b.durata+' mesi':'')}
-    ${rr('Km',b.km?b.km+' km':'')}
-    ${rr('Franchigia',b.fr||b.franchigia)}${rr('Note',b.note)}
-  </table>`;
+  const desc = `<h2 style="color:#0d1e90;font-family:sans-serif;margin-bottom:16px">Richiesta Noleggio Lungo Termine</h2>
+<table style="border-collapse:collapse;font-family:sans-serif;width:100%;max-width:600px">
+  <tr style="background:#f0f4ff"><td colspan="2" style="padding:8px 12px;font-weight:700;color:#0d1e90;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Intestatario</td></tr>
+  ${rr('Tipo', b.tipo)}${rr('Azienda / Nome', nome)}${rr('P.IVA / CF', b.piva_cf || b.piva || b.cf || '')}
+  <tr style="background:#f0f4ff"><td colspan="2" style="padding:8px 12px;font-weight:700;color:#0d1e90;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Referente</td></tr>
+  ${rr('Nome', b.referente || b.ref || nome)}${rr('Telefono', b.phone || b.tel)}${rr('Email', email)}
+  <tr style="background:#f0f4ff"><td colspan="2" style="padding:8px 12px;font-weight:700;color:#0d1e90;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Veicolo</td></tr>
+  ${rr('Marca', marca)}${rr('Modello', modello)}
+  <tr style="background:#f0f4ff"><td colspan="2" style="padding:8px 12px;font-weight:700;color:#0d1e90;font-size:12px;letter-spacing:.1em;text-transform:uppercase">Contratto</td></tr>
+  ${rr('Durata', durata + ' mesi')}${rr('Km Totali', km)}${rr('Franchigia', fr)}
+  ${b.note ? rr('Note', b.note) : ''}
+</table>`;
 
-  const payload = JSON.stringify({
-    subject: `NLT — ${marca} ${modello} | ${b.durata||'?'} mesi`,
+  const fdPayload = {
+    subject:     `NLT — ${marca} ${modello} (${durata} mesi) — ${nome}`,
     description: desc,
     email,
-    name: ref || nome,
-    phone: (b.tel||'').trim(),
-    priority: 2, status: 2,
-    tags: ['nlt','noleggio-lungo-termine']
-  });
+    name:        b.name || b.referente || b.ref || nome,
+    phone:       (b.phone || b.tel || '').trim(),
+    priority:    2,
+    status:      2,
+    tags:        ['nlt', 'noleggio-lungo-termine'],
+  };
 
-  const auth = Buffer.from(apiKey+':X').toString('base64');
+  // Aggiunge custom_fields solo se presenti e non vuoti
+  if (b.custom_fields && Object.keys(b.custom_fields).length) {
+    fdPayload.custom_fields = b.custom_fields;
+  }
+
+  // Usa https nativo (compatibile con tutti i runtime Netlify)
+  const https = require('https');
+  const auth  = Buffer.from(apiKey + ':X').toString('base64');
+  const body  = JSON.stringify(fdPayload);
 
   try {
-    const r = await new Promise((resolve, reject) => {
+    const result = await new Promise((resolve, reject) => {
       const req = https.request({
-        hostname: 'doubledsolution.freshdesk.com',
-        path: '/api/v2/tickets',
-        method: 'POST',
+        hostname: `${domain}.freshdesk.com`,
+        path:     '/api/v2/tickets',
+        method:   'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Basic ' + auth,
-          'Content-Length': Buffer.byteLength(payload)
+          'Content-Type':   'application/json',
+          'Authorization':  'Basic ' + auth,
+          'Content-Length': Buffer.byteLength(body),
         }
-      }, (res) => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve({ status: res.statusCode, body: d }));
+      }, res => {
+        let data = '';
+        res.on('data', c => data += c);
+        res.on('end', () => resolve({ status: res.statusCode, body: data }));
       });
       req.on('error', reject);
-      req.write(payload);
+      req.write(body);
       req.end();
     });
 
     let fd = {};
-    try { fd = JSON.parse(r.body); } catch(e) {}
+    try { fd = JSON.parse(result.body); } catch(e) {}
 
-    if (r.status === 201) {
-      return { statusCode: 201, headers: H, body: JSON.stringify({ ok: true, version: VERSION, ticket_id: fd.id }) };
+    if (result.status === 201) {
+      return { statusCode: 201, headers: H, body: JSON.stringify({ ok: true, id: fd.id }) };
     }
 
-    const errMsg = fd?.errors?.[0]?.message || fd?.description || r.body.substring(0,300);
-    return {
-      statusCode: r.status, headers: H,
-      body: JSON.stringify({ ok: false, version: VERSION, error: 'Freshdesk ' + r.status + ': ' + errMsg })
-    };
+    const errMsg = fd?.errors?.[0]?.message || fd?.description || result.body.substring(0, 200);
+    return { statusCode: result.status, headers: H, body: JSON.stringify({ ok: false, error: errMsg }) };
 
   } catch(e) {
-    return {
-      statusCode: 502, headers: H,
-      body: JSON.stringify({ ok: false, version: VERSION, error: 'Errore rete: ' + e.message })
-    };
+    return { statusCode: 502, headers: H, body: JSON.stringify({ ok: false, error: 'Rete: ' + e.message }) };
   }
 };
